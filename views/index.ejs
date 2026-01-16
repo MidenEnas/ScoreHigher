@@ -11,12 +11,11 @@
         <h1>Score Higher</h1>
         <nav>
             <a href="/">Home</a>
+            <% if (user && isAdmin) { %>
+                <a href="/admin">Admin</a>
+            <% } %>
             <% if (user) { %>
-                <% if (isAdmin) { %>
-                    <a href="/admin">Admin</a>
-                <% } %>
-                <span class="user-info">Welcome, <%= user.first_name %>!</span>
-                <form action="/logout" method="POST" style="display: inline;">
+                <form action="/logout" method="POST" style="display: inline; margin: 0;">
                     <button type="submit" class="logout-btn">Logout</button>
                 </form>
             <% } else { %>
