@@ -1,50 +1,63 @@
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./scorehigher.db');
+const mysql = require('mysql2');
 
-db.serialize(() => {
-  db.run(`CREATE TABLE IF NOT EXISTS competitions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    date TEXT NOT NULL,
-    boulder_enabled INTEGER DEFAULT 0,
-    lead_enabled INTEGER DEFAULT 0,
-    num_boulder_routes INTEGER DEFAULT 0,
-    num_lead_routes INTEGER DEFAULT 0,
-    flash_points INTEGER DEFAULT 75,
-    second_points INTEGER DEFAULT 50,
-    third_points INTEGER DEFAULT 25,
-    zone_points INTEGER DEFAULT 15,
-    topped_bonus REAL DEFAULT 1.5,
-    lead_zone_points INTEGER DEFAULT 15,
-    lead_top_points INTEGER DEFAULT 75,
-    self_judged INTEGER DEFAULT 0
-  )`);
-
-  db.run(`CREATE TABLE IF NOT EXISTS routes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    competition_id INTEGER,
-    type TEXT NOT NULL,
-    number INTEGER NOT NULL,
-    FOREIGN KEY (competition_id) REFERENCES competitions(id) ON DELETE CASCADE
-  )`);
-
-  db.run(`CREATE TABLE IF NOT EXISTS competitors (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    competition_id INTEGER,
-    FOREIGN KEY (competition_id) REFERENCES competitions(id) ON DELETE CASCADE
-  )`);
-
-  db.run(`CREATE TABLE IF NOT EXISTS scores (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    competitor_id INTEGER,
-    route_id INTEGER,
-    attempts INTEGER DEFAULT 0,
-    topped INTEGER DEFAULT 0,
-    zones INTEGER DEFAULT 0,
-    FOREIGN KEY (competitor_id) REFERENCES competitors(id) ON DELETE CASCADE,
-    FOREIGN KEY (route_id) REFERENCES routes(id) ON DELETE CASCADE
-  )`);
+const db = mysql.createConnection({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'scorehigher'
 });
+
+db.connect((err) => {
+  if (err) {
+    console.error('Database connection failed:', err);
+  } else {
+    console.log('Connected to database');
+  }
+});
+
+// Create tables if they don't exist
+db.query(`CREATE TABLE IF NOT EXISTS competitions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  date DATE NOT NULL,
+  boulder_enabled BOOLEAN DEFAULT FALSE,
+  lead_enabled BOOLEAN DEFAULT FALSE,
+  num_boulder_routes INT DEFAULT 0,
+  num_lead_routes INT DEFAULT 0,
+  flash_points INT DEFAULT 75,
+  second_points INT DEFAULT 50,
+  third_points INT DEFAULT 25,
+  zone_points INT DEFAULT 15,
+  topped_bonus DECIMAL(3,1) DEFAULT 1.5,
+  lead_zone_points INT DEFAULT 15,
+  lead_top_points INT DEFAULT 75,
+  self_judged BOOLEAN DEFAULT FALSE
+)`);
+
+db.query(`CREATE TABLE IF NOT EXISTS routes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  competition_id INT,
+  type ENUM('boulder', 'lead') NOT NULL,
+  number INT NOT NULL,
+  FOREIGN KEY (competition_id) REFERENCES competitions(id) ON DELETE CASCADE
+)`);
+
+db.query(`CREATE TABLE IF NOT EXISTS competitors (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  competition_id INT,
+  FOREIGN KEY (competition_id) REFERENCES competitions(id) ON DELETE CASCADE
+)`);
+
+db.query(`CREATE TABLE IF NOT EXISTS scores (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  competitor_id INT,
+  route_id INT,
+  attempts INT DEFAULT 0,
+  topped BOOLEAN DEFAULT FALSE,
+  zones INT DEFAULT 0,
+  FOREIGN KEY (competitor_id) REFERENCES competitors(id) ON DELETE CASCADE,
+  FOREIGN KEY (route_id) REFERENCES routes(id) ON DELETE CASCADE
+)`);
 
 module.exports = db;
