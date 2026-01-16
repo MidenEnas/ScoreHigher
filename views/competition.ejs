@@ -69,20 +69,6 @@
             <p>No routes configured yet.</p>
         <% } %>
 
-        <h2>Competitors</h2>
-        <% if (competitors && competitors.length > 0) { %>
-            <div class="competitors-list">
-                <% competitors.forEach(comp => { %>
-                    <div class="competitor-card">
-                        <h3><%= comp.name %></h3>
-                        <p><%= competition.self_judged ? `Phone: ${comp.phone || 'Not provided'}` : `Bib: ${comp.bib || 'Not assigned'}` %></p>
-                    </div>
-                <% }); %>
-            </div>
-        <% } else { %>
-            <p>No competitors registered yet.</p>
-        <% } %>
-
         <h2>Leaderboard</h2>
         <% if (leaderboard && leaderboard.length > 0) { %>
             <div class="leaderboard">

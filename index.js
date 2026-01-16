@@ -90,7 +90,6 @@ app.get('/competition/:id', async (req, res) => {
     if (!competition) return res.status(404).send('Competition not found');
     
     const routes = await dbAll('SELECT * FROM routes WHERE competition_id = ? ORDER BY type, number', [compId]);
-    const competitors = await dbAll('SELECT * FROM competitors WHERE competition_id = ? ORDER BY name', [compId]);
     
     // Get all scores for leaderboard calculation
     const scores = await dbAll(`
@@ -154,7 +153,6 @@ app.get('/competition/:id', async (req, res) => {
     res.render('competition', { 
       competition, 
       routes, 
-      competitors, 
       leaderboard: leaderboardArray,
       success: req.query.success 
     });
