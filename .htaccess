@@ -1,0 +1,5 @@
+PassengerAppRoot /home/u745985135/domains/scorehigher.mountaingrid.co.za/public_html
+PassengerAppType node
+PassengerNodejs /opt/alt/alt-nodejs22/root/bin/node
+PassengerStartupFile index.js
+PassengerBaseURI /
