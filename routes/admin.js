@@ -27,13 +27,16 @@ router.post('/create-competition', async (req, res) => {
   }
   
   try {
+    const boulderRoutes = boulder ? parseInt(numBoulder) || 1 : 0;
+    const leadRoutes = lead ? parseInt(numLead) || 1 : 0;
+    
     const result = await dbRun(`INSERT INTO competitions (name, date, location, boulder_enabled, lead_enabled, num_boulder_routes, num_lead_routes, flash_points, second_points, third_points, zone_points, topped_bonus, lead_zone_points, lead_top_points, self_judged) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
-      [name, date, location || '', boulder ? 1 : 0, lead ? 1 : 0, numBoulder || 0, numLead || 0, flash || 75, second || 50, third || 25, zone || 15, bonus || 1.5, leadZone || 15, leadTop || 75, selfJudged ? 1 : 0]);
+      [name, date, location || '', boulder ? 1 : 0, lead ? 1 : 0, boulderRoutes, leadRoutes, flash || 75, second || 50, third || 25, zone || 15, bonus || 1.5, leadZone || 15, leadTop || 75, selfJudged ? 1 : 0]);
     const compId = result.lastID;
     
     // Create routes
     let count = 0;
-    const total = (boulder ? parseInt(numBoulder) : 0) + (lead ? parseInt(numLead) : 0);
+    const total = boulderRoutes + leadRoutes;
     if (total === 0) return res.redirect('/admin');
     
     const insertRoute = async (type, num) => {
@@ -42,13 +45,13 @@ router.post('/create-competition', async (req, res) => {
       if (count === total) res.redirect('/admin');
     };
     
-    if (boulder && numBoulder) {
-      for (let i = 1; i <= parseInt(numBoulder); i++) {
+    if (boulder && boulderRoutes > 0) {
+      for (let i = 1; i <= boulderRoutes; i++) {
         insertRoute('boulder', i);
       }
     }
-    if (lead && numLead) {
-      for (let i = 1; i <= parseInt(numLead); i++) {
+    if (lead && leadRoutes > 0) {
+      for (let i = 1; i <= leadRoutes; i++) {
         insertRoute('lead', i);
       }
     }
@@ -85,8 +88,11 @@ router.post('/competition/:id/edit', async (req, res) => {
   }
   
   try {
+    const boulderRoutes = boulder ? parseInt(numBoulder) || 1 : 0;
+    const leadRoutes = lead ? parseInt(numLead) || 1 : 0;
+    
     await dbRun(`UPDATE competitions SET name = ?, date = ?, location = ?, boulder_enabled = ?, lead_enabled = ?, num_boulder_routes = ?, num_lead_routes = ?, flash_points = ?, second_points = ?, third_points = ?, zone_points = ?, topped_bonus = ?, lead_zone_points = ?, lead_top_points = ?, self_judged = ? WHERE id = ?`, 
-      [name, date, location || '', boulder ? 1 : 0, lead ? 1 : 0, numBoulder || 0, numLead || 0, flash || 75, second || 50, third || 25, zone || 15, bonus || 1.5, leadZone || 15, leadTop || 75, selfJudged ? 1 : 0, compId]);
+      [name, date, location || '', boulder ? 1 : 0, lead ? 1 : 0, boulderRoutes, leadRoutes, flash || 75, second || 50, third || 25, zone || 15, bonus || 1.5, leadZone || 15, leadTop || 75, selfJudged ? 1 : 0, compId]);
     
     res.redirect(`/admin/competition/${compId}`);
   } catch (err) {

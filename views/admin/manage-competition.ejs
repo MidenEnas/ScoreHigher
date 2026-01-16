@@ -40,7 +40,7 @@
 
                 <div id="boulderOptions" style="display: none;">
                     <label for="numBoulder">Number of Boulder Routes:</label>
-                    <input type="number" id="numBoulder" name="numBoulder" value="<%= competition.num_boulder_routes %>"><br>
+                    <input type="number" id="numBoulder" name="numBoulder" value="<%= competition.num_boulder_routes %>" min="1"><br>
                 </div>
 
                 <label for="lead">Enable Lead:</label>
@@ -48,7 +48,7 @@
 
                 <div id="leadOptions" style="display: none;">
                     <label for="numLead">Number of Lead Routes:</label>
-                    <input type="number" id="numLead" name="numLead" value="<%= competition.num_lead_routes %>"><br>
+                    <input type="number" id="numLead" name="numLead" value="<%= competition.num_lead_routes %>" min="1"><br>
                 </div>
 
                 <label for="customPoints">Customize Point Values:</label>
@@ -181,10 +181,30 @@
             }
 
             document.getElementById('boulder').addEventListener('change', function() {
-                document.getElementById('boulderOptions').style.display = this.checked ? 'block' : 'none';
+                const boulderOptions = document.getElementById('boulderOptions');
+                const numBoulderInput = document.getElementById('numBoulder');
+                if (this.checked) {
+                    boulderOptions.style.display = 'block';
+                    if (!numBoulderInput.value || numBoulderInput.value === '0') {
+                        numBoulderInput.value = '1';
+                    }
+                } else {
+                    boulderOptions.style.display = 'none';
+                    numBoulderInput.value = '';
+                }
             });
             document.getElementById('lead').addEventListener('change', function() {
-                document.getElementById('leadOptions').style.display = this.checked ? 'block' : 'none';
+                const leadOptions = document.getElementById('leadOptions');
+                const numLeadInput = document.getElementById('numLead');
+                if (this.checked) {
+                    leadOptions.style.display = 'block';
+                    if (!numLeadInput.value || numLeadInput.value === '0') {
+                        numLeadInput.value = '1';
+                    }
+                } else {
+                    leadOptions.style.display = 'none';
+                    numLeadInput.value = '';
+                }
             });
             document.getElementById('customPoints').addEventListener('change', function() {
                 document.getElementById('pointOptions').style.display = this.checked ? 'block' : 'none';
