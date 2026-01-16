@@ -44,9 +44,18 @@ router.post('/create-competition', async (req, res) => {
   }
   
   try {
-    const result = await dbRun(`INSERT INTO competitions (name, date, location, boulder_enabled, lead_enabled, num_boulder_routes, num_lead_routes, flash_points, second_points, third_points, zone_points, topped_bonus, lead_zone_points, lead_top_points, self_judged) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
-      [name, date, location || '', boulder ? 1 : 0, lead ? 1 : 0, numBoulder || 0, numLead || 0, flash || 75, second || 50, third || 25, zone || 15, bonus || 1.5, leadZone || 15, leadTop || 75, selfJudged ? 1 : 0]);
+    const result = await dbRun(`INSERT INTO competitions (name, date, boulder_enabled, lead_enabled, num_boulder_routes, num_lead_routes, flash_points, second_points, third_points, zone_points, topped_bonus, lead_zone_points, lead_top_points, self_judged) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+      [name, date, boulder ? 1 : 0, lead ? 1 : 0, numBoulder || 0, numLead || 0, flash || 75, second || 50, third || 25, zone || 15, bonus || 1.5, leadZone || 15, leadTop || 75, selfJudged ? 1 : 0]);
     const compId = result.lastID;
+    
+    // Update location if provided
+    if (location) {
+      try {
+        await dbRun('UPDATE competitions SET location = ? WHERE id = ?', [location, compId]);
+      } catch (err) {
+        // Column might not exist yet, ignore
+      }
+    }
     
     // Create routes
     let count = 0;
