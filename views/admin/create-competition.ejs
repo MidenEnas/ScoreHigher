@@ -24,43 +24,64 @@
             <label for="boulder">Enable Bouldering:</label>
             <input type="checkbox" id="boulder" name="boulder"><br>
 
+            <div id="boulderOptions" style="display: none;">
+                <label for="numBoulder">Number of Boulder Routes:</label>
+                <input type="number" id="numBoulder" name="numBoulder"><br>
+            </div>
+
             <label for="lead">Enable Lead:</label>
             <input type="checkbox" id="lead" name="lead"><br>
 
-            <label for="numBoulder">Number of Boulder Routes:</label>
-            <input type="number" id="numBoulder" name="numBoulder"><br>
+            <div id="leadOptions" style="display: none;">
+                <label for="numLead">Number of Lead Routes:</label>
+                <input type="number" id="numLead" name="numLead"><br>
+            </div>
 
-            <label for="numLead">Number of Lead Routes:</label>
-            <input type="number" id="numLead" name="numLead"><br>
+            <label for="customPoints">Customize Point Values:</label>
+            <input type="checkbox" id="customPoints" name="customPoints"><br>
 
-            <h3>Point Values (Bouldering)</h3>
-            <label for="flash">Flash Points:</label>
-            <input type="number" id="flash" name="flash" value="75"><br>
+            <div id="pointOptions" style="display: none;">
+                <h3>Point Values (Bouldering)</h3>
+                <label for="flash">Flash Points:</label>
+                <input type="number" id="flash" name="flash" value="75"><br>
 
-            <label for="second">Second Attempt Points:</label>
-            <input type="number" id="second" name="second" value="50"><br>
+                <label for="second">Second Attempt Points:</label>
+                <input type="number" id="second" name="second" value="50"><br>
 
-            <label for="third">Third+ Attempt Points:</label>
-            <input type="number" id="third" name="third" value="25"><br>
+                <label for="third">Third+ Attempt Points:</label>
+                <input type="number" id="third" name="third" value="25"><br>
 
-            <label for="zone">Zone Points:</label>
-            <input type="number" id="zone" name="zone" value="15"><br>
+                <label for="zone">Zone Points:</label>
+                <input type="number" id="zone" name="zone" value="15"><br>
 
-            <label for="bonus">Topped Bonus Multiplier:</label>
-            <input type="number" step="0.1" id="bonus" name="bonus" value="1.5"><br>
+                <label for="bonus">Topped Bonus Multiplier:</label>
+                <input type="number" step="0.1" id="bonus" name="bonus" value="1.5"><br>
 
-            <h3>Point Values (Lead)</h3>
-            <label for="leadZone">Zone Points:</label>
-            <input type="number" id="leadZone" name="leadZone" value="15"><br>
+                <h3>Point Values (Lead)</h3>
+                <label for="leadZone">Zone Points:</label>
+                <input type="number" id="leadZone" name="leadZone" value="15"><br>
 
-            <label for="leadTop">Top Points:</label>
-            <input type="number" id="leadTop" name="leadTop" value="75"><br>
+                <label for="leadTop">Top Points:</label>
+                <input type="number" id="leadTop" name="leadTop" value="75"><br>
+            </div>
 
             <label for="selfJudged">Self-Judged Competition:</label>
             <input type="checkbox" id="selfJudged" name="selfJudged"><br>
 
             <button type="submit">Create Competition</button>
         </form>
+
+        <script>
+            document.getElementById('boulder').addEventListener('change', function() {
+                document.getElementById('boulderOptions').style.display = this.checked ? 'block' : 'none';
+            });
+            document.getElementById('lead').addEventListener('change', function() {
+                document.getElementById('leadOptions').style.display = this.checked ? 'block' : 'none';
+            });
+            document.getElementById('customPoints').addEventListener('change', function() {
+                document.getElementById('pointOptions').style.display = this.checked ? 'block' : 'none';
+            });
+        </script>
     </main>
 </body>
 </html>
