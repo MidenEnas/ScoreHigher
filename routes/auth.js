@@ -37,9 +37,13 @@ router.post('/register', async (req, res) => {
     // Create user
     const userId = await createUser(firstName, lastName, email, password);
 
+    // Get the created user to get the correct role
+    const { getUserById } = require('../auth');
+    const user = await getUserById(userId);
+
     // Log them in
     req.session.userId = userId;
-    req.session.role = 'user';
+    req.session.role = user.role;
 
     res.redirect('/');
   } catch (err) {
