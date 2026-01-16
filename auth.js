@@ -24,12 +24,13 @@ function requireJudgeOrAdmin(req, res, next) {
 }
 
 // User management functions
-async function createUser(firstName, lastName, email, password, role = 'user') {
-  // Special case: make ellisvictor9@gmail.com admin automatically
-  if (email.toLowerCase() === 'ellisvictor9@gmail.com') {
-    role = 'admin';
+async function createUser(firstName, lastName, email, password, role = null) {
+  // If no role specified, check if this is the first user
+  if (!role) {
+    const existingUsers = await dbAll('SELECT COUNT(*) as count FROM users');
+    role = existingUsers[0].count === 0 ? 'admin' : 'user';
   }
-  
+
   const hashedPassword = await bcrypt.hash(password, 10);
   const result = await dbRun(
     'INSERT INTO users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)',
