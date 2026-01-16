@@ -136,7 +136,7 @@
             const phone = document.getElementById('phone').value.trim();
 
             if (!firstName || !lastName || !phone) {
-                alert('Please fill in all your information fields.');
+                alert('Please fill in all your information fields (First Name, Last Name, and Phone Number).');
                 e.preventDefault();
                 return false;
             }
@@ -145,6 +145,13 @@
             const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
             if (!phoneRegex.test(phone)) {
                 alert('Please enter a valid phone number.');
+                e.preventDefault();
+                return false;
+            }
+
+            // Confirmation prompt
+            const confirmed = confirm('Are you sure you want to submit your scores? Once submitted, you cannot change them.');
+            if (!confirmed) {
                 e.preventDefault();
                 return false;
             }

@@ -80,15 +80,19 @@
                         <tr>
                             <th>Position</th>
                             <th>Name</th>
-                            <% if (competition.self_judged) { %><th>Phone</th><% } %>
                             <th>Total Points</th>
-                            <% if (competition.boulder_enabled) { %>
-                                <th>Boulder Points</th>
-                                <th>Boulder Routes</th>
-                            <% } %>
-                            <% if (competition.lead_enabled) { %>
-                                <th>Lead Points</th>
-                                <th>Lead Routes</th>
+                            <% 
+                            const disciplinesEnabled = (competition.boulder_enabled ? 1 : 0) + (competition.lead_enabled ? 1 : 0);
+                            if (disciplinesEnabled > 1) { 
+                            %>
+                                <% if (competition.boulder_enabled) { %>
+                                    <th>Boulder Points</th>
+                                    <th>Boulder Routes</th>
+                                <% } %>
+                                <% if (competition.lead_enabled) { %>
+                                    <th>Lead Points</th>
+                                    <th>Lead Routes</th>
+                                <% } %>
                             <% } %>
                         </tr>
                     </thead>
@@ -97,15 +101,16 @@
                             <tr class="<%= index === 0 ? 'first-place' : index === 1 ? 'second-place' : index === 2 ? 'third-place' : '' %>">
                                 <td class="position"><%= index + 1 %></td>
                                 <td class="name"><%= competitor.name %></td>
-                                <% if (competition.self_judged) { %><td class="phone"><%= competitor.phone %></td><% } %>
                                 <td class="total-points"><%= competitor.totalPoints %></td>
-                                <% if (competition.boulder_enabled) { %>
-                                    <td class="boulder-points"><%= competitor.boulderPoints %></td>
-                                    <td class="boulder-routes"><%= competitor.boulderRoutes %></td>
-                                <% } %>
-                                <% if (competition.lead_enabled) { %>
-                                    <td class="lead-points"><%= competitor.leadPoints %></td>
-                                    <td class="lead-routes"><%= competitor.leadRoutes %></td>
+                                <% if (disciplinesEnabled > 1) { %>
+                                    <% if (competition.boulder_enabled) { %>
+                                        <td class="boulder-points"><%= competitor.boulderPoints %></td>
+                                        <td class="boulder-routes"><%= competitor.boulderRoutes %></td>
+                                    <% } %>
+                                    <% if (competition.lead_enabled) { %>
+                                        <td class="lead-points"><%= competitor.leadPoints %></td>
+                                        <td class="lead-routes"><%= competitor.leadRoutes %></td>
+                                    <% } %>
                                 <% } %>
                             </tr>
                         <% }); %>
