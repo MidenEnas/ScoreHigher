@@ -20,6 +20,13 @@
         <p><strong>Lead:</strong> <%= competition.lead_enabled ? 'Yes (' + competition.num_lead_routes + ' routes)' : 'No' %></p>
         <p><strong>Self-Judged:</strong> <%= competition.self_judged ? 'Yes' : 'No' %></p>
 
+        <div style="margin-top: 1rem;">
+            <a href="/admin/competition/<%= competition.id %>/edit" class="btn">Edit Competition</a>
+            <form method="POST" action="/admin/competition/<%= competition.id %>/delete" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this competition? This will delete all associated routes and competitors.');">
+                <button type="submit" class="btn btn-danger">Delete Competition</button>
+            </form>
+        </div>
+
         <h2>Routes</h2>
         <% if (routes && routes.length > 0) { %>
             <ul>

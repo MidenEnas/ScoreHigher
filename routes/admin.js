@@ -75,6 +75,58 @@ router.get('/competition/:id', async (req, res) => {
   }
 });
 
+// Edit competition form
+router.get('/competition/:id/edit', async (req, res) => {
+  try {
+    const compId = req.params.id;
+    const competition = await dbGet('SELECT * FROM competitions WHERE id = ?', [compId]);
+    if (!competition) return res.status(404).send('Competition not found');
+    
+    res.render('admin/edit-competition', { competition });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send('Database error');
+  }
+});
+
+// Handle edit competition
+router.post('/competition/:id/edit', async (req, res) => {
+  const compId = req.params.id;
+  const { name, date, location, boulder, lead, numBoulder, numLead, flash, second, third, zone, bonus, leadZone, leadTop, selfJudged } = req.body;
+  
+  if (!name || !date) {
+    return res.status(400).send('Name and date are required');
+  }
+  
+  try {
+    await dbRun(`UPDATE competitions SET name = ?, date = ?, location = ?, boulder_enabled = ?, lead_enabled = ?, num_boulder_routes = ?, num_lead_routes = ?, flash_points = ?, second_points = ?, third_points = ?, zone_points = ?, topped_bonus = ?, lead_zone_points = ?, lead_top_points = ?, self_judged = ? WHERE id = ?`, 
+      [name, date, location || '', boulder ? 1 : 0, lead ? 1 : 0, numBoulder || 0, numLead || 0, flash || 75, second || 50, third || 25, zone || 15, bonus || 1.5, leadZone || 15, leadTop || 75, selfJudged ? 1 : 0, compId]);
+    
+    res.redirect(`/admin/competition/${compId}`);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send('Error updating competition');
+  }
+});
+
+// Handle delete competition
+router.post('/competition/:id/delete', async (req, res) => {
+  const compId = req.params.id;
+  
+  try {
+    // Delete associated data first
+    await dbRun('DELETE FROM scores WHERE route_id IN (SELECT id FROM routes WHERE competition_id = ?)', [compId]);
+    await dbRun('DELETE FROM routes WHERE competition_id = ?', [compId]);
+    await dbRun('DELETE FROM competitors WHERE competition_id = ?', [compId]);
+    await dbRun('DELETE FROM competitions WHERE id = ?', [compId]);
+    
+    res.redirect('/admin');
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send('Error deleting competition');
+  }
+});
+
 // Handle add competitor
 router.post('/competition/:id/add-competitor', async (req, res) => {
   const compId = req.params.id;
