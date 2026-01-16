@@ -196,19 +196,33 @@ app.post('/competition/:id/enter', async (req, res) => {
     if (scores && typeof scores === 'object') {
       for (const [routeId, scoreData] of Object.entries(scores)) {
         if (scoreData && typeof scoreData === 'object') {
-          const { flash, topSecond, topAny, zone, top, zone1, zone2, zone3 } = scoreData;
+          const { score } = scoreData;
           
-          // Determine topped status (prioritize top over zone)
-          const hasTop = flash || topSecond || topAny || top;
-          const hasZone = hasTop ? false : (zone || zone1 || zone2 || zone3); // Only count zone if no top
+          // Determine topped status and attempts based on score type
+          let hasTop = false;
+          let hasZone = false;
+          let attempts = 0;
+          
+          if (score === 'flash') {
+            hasTop = true;
+            attempts = 1;
+          } else if (score === 'topSecond') {
+            hasTop = true;
+            attempts = 2;
+          } else if (score === 'topAny') {
+            hasTop = true;
+            attempts = 3;
+          } else if (score === 'zone') {
+            hasZone = true;
+          }
           
           // Insert score record
           await dbRun('INSERT INTO scores (competitor_id, route_id, attempts, topped, zones) VALUES (?, ?, ?, ?, ?)', [
             competitorId,
             routeId,
-            flash ? 1 : (topSecond ? 2 : (topAny ? 3 : 0)), // attempts based on selection
-            hasTop ? 1 : 0, // topped
-            hasZone ? 1 : 0 // zones only if no top
+            attempts,
+            hasTop ? 1 : 0,
+            hasZone ? 1 : 0
           ]);
         }
       }
