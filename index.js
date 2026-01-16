@@ -3,7 +3,7 @@ const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
 const bodyParser = require('body-parser');
 const path = require('path');
-const { initDatabase } = require('./db');
+const { initDatabase, dbAll, dbGet } = require('./db');
 
 const app = express();
 const port = process.env.PORT || 3000;
