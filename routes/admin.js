@@ -13,6 +13,23 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Manage specific competition
+router.get('/competition/:id', async (req, res) => {
+  try {
+    const compId = req.params.id;
+    const competition = await dbGet('SELECT * FROM competitions WHERE id = ?', [compId]);
+    if (!competition) return res.status(404).send('Competition not found');
+    
+    const routes = await dbAll('SELECT * FROM routes WHERE competition_id = ? ORDER BY type, number', [compId]);
+    const competitors = await dbAll('SELECT * FROM competitors WHERE competition_id = ? ORDER BY name', [compId]);
+    
+    res.render('admin/manage-competition', { competition, routes, competitors });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send('Database error');
+  }
+});
+
 // Create competition form
 router.get('/create-competition', (req, res) => {
   res.render('admin/create-competition');
@@ -55,6 +72,24 @@ router.post('/create-competition', async (req, res) => {
   } catch (err) {
     console.error(err);
     return res.status(500).send('Error creating competition');
+  }
+});
+
+// Handle add competitor
+router.post('/competition/:id/add-competitor', async (req, res) => {
+  const compId = req.params.id;
+  const { name } = req.body;
+  
+  if (!name) {
+    return res.status(400).send('Name is required');
+  }
+  
+  try {
+    await dbRun('INSERT INTO competitors (name, competition_id) VALUES (?, ?)', [name, compId]);
+    res.redirect(`/admin/competition/${compId}`);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send('Error adding competitor');
   }
 });
 

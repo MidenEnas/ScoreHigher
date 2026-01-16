@@ -16,7 +16,19 @@
     <main>
         <h2>Manage Competitions</h2>
         <a href="/admin/create-competition">Create New Competition</a>
-        <!-- List existing competitions here -->
+        <h3>Existing Competitions</h3>
+        <% if (competitions && competitions.length > 0) { %>
+            <ul>
+                <% competitions.forEach(comp => { %>
+                    <li>
+                        <strong><%= comp.name %></strong> - <%= comp.date %>
+                        <a href="/admin/competition/<%= comp.id %>">Manage</a>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p>No competitions yet.</p>
+        <% } %>
     </main>
 </body>
 </html>

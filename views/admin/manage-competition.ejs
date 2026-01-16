@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage <%= competition.name %> - Score Higher</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Manage <%= competition.name %></h1>
+        <nav>
+            <a href="/admin">Admin</a>
+        </nav>
+    </header>
+    <main>
+        <p><strong>Date:</strong> <%= competition.date %></p>
+        <p><strong>Boulder:</strong> <%= competition.boulder_enabled ? 'Yes (' + competition.num_boulder_routes + ' routes)' : 'No' %></p>
+        <p><strong>Lead:</strong> <%= competition.lead_enabled ? 'Yes (' + competition.num_lead_routes + ' routes)' : 'No' %></p>
+        <p><strong>Self-Judged:</strong> <%= competition.self_judged ? 'Yes' : 'No' %></p>
+
+        <h2>Routes</h2>
+        <% if (routes && routes.length > 0) { %>
+            <ul>
+                <% routes.forEach(route => { %>
+                    <li><%= route.type.charAt(0).toUpperCase() + route.type.slice(1) %> <%= route.number %></li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p>No routes.</p>
+        <% } %>
+
+        <h2>Competitors</h2>
+        <% if (competitors && competitors.length > 0) { %>
+            <ul>
+                <% competitors.forEach(comp => { %>
+                    <li><%= comp.name %></li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p>No competitors yet.</p>
+        <% } %>
+
+        <% if (!competition.self_judged) { %>
+            <h3>Add Competitor</h3>
+            <form action="/admin/competition/<%= competition.id %>/add-competitor" method="POST">
+                <label for="name">Competitor Name:</label>
+                <input type="text" id="name" name="name" required>
+                <button type="submit">Add Competitor</button>
+            </form>
+        <% } %>
+    </main>
+</body>
+</html>
