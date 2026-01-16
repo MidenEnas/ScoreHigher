@@ -56,6 +56,19 @@ async function initDatabase() {
       )
     `);
 
+    // Users table
+    await dbRun(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        first_name TEXT NOT NULL,
+        last_name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        role TEXT DEFAULT 'user',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     // Routes table
     await dbRun(`
       CREATE TABLE IF NOT EXISTS routes (

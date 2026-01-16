@@ -451,3 +451,133 @@ main {
 .leaderboard-table tbody tr:hover {
     background-color: #f8f9fa;
 }
+
+/* Authentication Styles */
+.auth-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.auth-link {
+    text-align: center;
+    margin-top: 1rem;
+    color: #666;
+}
+
+.user-info {
+    color: #007bff;
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+.logout-btn {
+    background: none;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.logout-btn:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Admin Users Management */
+.users-table-container {
+    overflow-x: auto;
+    margin-top: 2rem;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.users-table th,
+.users-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.users-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+}
+
+.role-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.role-admin {
+    background-color: #dc3545;
+    color: white;
+}
+
+.role-judge {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.role-user {
+    background-color: #6c757d;
+    color: white;
+}
+
+.role-form {
+    margin: 0;
+}
+
+.role-select {
+    padding: 0.25rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.no-users {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-style: italic;
+}
+
+.search-section {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.clear-search {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.clear-search:hover {
+    text-decoration: underline;
+}

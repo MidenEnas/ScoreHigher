@@ -30,13 +30,37 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Make user info available in all templates
+app.use(async (req, res, next) => {
+  res.locals.user = null;
+  res.locals.isAdmin = false;
+  res.locals.isJudge = false;
+
+  if (req.session.userId) {
+    try {
+      const { getUserById } = require('./auth');
+      const user = await getUserById(req.session.userId);
+      if (user) {
+        res.locals.user = user;
+        res.locals.isAdmin = user.role === 'admin';
+        res.locals.isJudge = user.role === 'judge';
+      }
+    } catch (err) {
+      console.error('Error fetching user:', err);
+    }
+  }
+  next();
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
 // Routes
+app.use('/', require('./routes/auth'));
 app.use('/admin', require('./routes/admin'));
+app.use('/admin', require('./routes/users'));
 
 app.get('/', async (req, res) => {
   try {

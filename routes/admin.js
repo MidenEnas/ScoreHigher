@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { dbAll, dbRun, dbGet } = require('../db');
+const { requireAdmin } = require('../auth');
 
 // Admin dashboard
-router.get('/', async (req, res) => {
+router.get('/', requireAdmin, async (req, res) => {
   try {
     const competitions = await dbAll('SELECT * FROM competitions');
     res.render('admin/index', { competitions });
@@ -14,12 +15,12 @@ router.get('/', async (req, res) => {
 });
 
 // Create competition form
-router.get('/create-competition', (req, res) => {
+router.get('/create-competition', requireAdmin, (req, res) => {
   res.render('admin/create-competition');
 });
 
 // Handle create competition
-router.post('/create-competition', async (req, res) => {
+router.post('/create-competition', requireAdmin, async (req, res) => {
   const { name, date, location, boulder, lead, numBoulder, numLead, flash, second, third, zone, bonus, leadZone, leadTop, selfJudged } = req.body;
   
   if (!name || !date) {
@@ -62,7 +63,7 @@ router.post('/create-competition', async (req, res) => {
 });
 
 // Manage specific competition
-router.get('/competition/:id', async (req, res) => {
+router.get('/competition/:id', requireAdmin, async (req, res) => {
   try {
     const compId = req.params.id;
     const competition = await dbGet('SELECT * FROM competitions WHERE id = ?', [compId]);
@@ -79,7 +80,7 @@ router.get('/competition/:id', async (req, res) => {
 });
 
 // Handle edit competition
-router.post('/competition/:id/edit', async (req, res) => {
+router.post('/competition/:id/edit', requireAdmin, async (req, res) => {
   const compId = req.params.id;
   const { name, date, location, boulder, lead, numBoulder, numLead, flash, second, third, zone, bonus, leadZone, leadTop, selfJudged } = req.body;
   
@@ -105,7 +106,7 @@ router.post('/competition/:id/edit', async (req, res) => {
 });
 
 // Handle delete competition
-router.post('/competition/:id/delete', async (req, res) => {
+router.post('/competition/:id/delete', requireAdmin, async (req, res) => {
   const compId = req.params.id;
   
   try {
@@ -123,7 +124,7 @@ router.post('/competition/:id/delete', async (req, res) => {
 });
 
 // Handle add competitor
-router.post('/competition/:id/add-competitor', async (req, res) => {
+router.post('/competition/:id/add-competitor', requireAdmin, async (req, res) => {
   const compId = req.params.id;
   const { name, bib, phone } = req.body;
   
@@ -141,7 +142,7 @@ router.post('/competition/:id/add-competitor', async (req, res) => {
 });
 
 // Handle edit competitor
-router.post('/competition/:compId/edit-competitor/:competitorId', async (req, res) => {
+router.post('/competition/:compId/edit-competitor/:competitorId', requireAdmin, async (req, res) => {
   const { compId, competitorId } = req.params;
   const { name, bib, phone } = req.body;
   
@@ -159,7 +160,7 @@ router.post('/competition/:compId/edit-competitor/:competitorId', async (req, re
 });
 
 // Handle delete competitor
-router.post('/competition/:compId/delete-competitor/:competitorId', async (req, res) => {
+router.post('/competition/:compId/delete-competitor/:competitorId', requireAdmin, async (req, res) => {
   const { compId, competitorId } = req.params;
   
   try {
