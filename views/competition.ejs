@@ -15,6 +15,12 @@
         </nav>
     </header>
     <main>
+        <% if (typeof success !== 'undefined' && success === '1') { %>
+            <div class="success-message">
+                <p>✅ Your scores have been submitted successfully! Thank you for participating.</p>
+            </div>
+        <% } %>
+
         <div class="competition-header">
             <div class="competition-info">
                 <h2>Competition Details</h2>
@@ -46,7 +52,6 @@
                         <% boulderRoutes.forEach(route => { %>
                             <div class="route-card">
                                 <h4>Route <%= route.number %></h4>
-                                <p>Points: Flash (<%= competition.flash_points %>), Second (<%= competition.second_points %>), Third+ (<%= competition.third_points %>), Zone (<%= competition.zone_points %>)</p>
                             </div>
                         <% }); %>
                     </div>
@@ -58,7 +63,6 @@
                         <% leadRoutes.forEach(route => { %>
                             <div class="route-card">
                                 <h4>Route <%= route.number %></h4>
-                                <p>Points: Zone (<%= competition.lead_zone_points %>), Top (<%= competition.lead_top_points %>)</p>
                             </div>
                         <% }); %>
                     </div>
@@ -80,6 +84,12 @@
             </div>
         <% } else { %>
             <p>No competitors registered yet.</p>
+        <% } %>
+
+        <% if (competition.self_judged) { %>
+            <div class="enter-competition">
+                <a href="/competition/<%= competition.id %>/enter" class="enter-button">Enter Competition</a>
+            </div>
         <% } %>
     </main>
 </body>

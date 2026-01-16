@@ -3,7 +3,7 @@ const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
 const bodyParser = require('body-parser');
 const path = require('path');
-const { initDatabase, dbAll, dbGet } = require('./db');
+const { initDatabase, dbAll, dbGet, dbRun } = require('./db');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -68,10 +68,73 @@ app.get('/competition/:id', async (req, res) => {
     const routes = await dbAll('SELECT * FROM routes WHERE competition_id = ? ORDER BY type, number', [compId]);
     const competitors = await dbAll('SELECT * FROM competitors WHERE competition_id = ? ORDER BY name', [compId]);
     
-    res.render('competition', { competition, routes, competitors });
+    res.render('competition', { 
+      competition, 
+      routes, 
+      competitors, 
+      success: req.query.success 
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send('Database error');
+  }
+});
+
+app.get('/competition/:id/enter', async (req, res) => {
+  try {
+    const compId = req.params.id;
+    const competition = await dbGet('SELECT * FROM competitions WHERE id = ?', [compId]);
+    if (!competition) return res.status(404).send('Competition not found');
+    
+    if (!competition.self_judged) {
+      return res.status(400).send('This competition does not allow self-entry');
+    }
+    
+    const routes = await dbAll('SELECT * FROM routes WHERE competition_id = ? ORDER BY type, number', [compId]);
+    
+    res.render('enter-competition', { competition, routes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Database error');
+  }
+});
+
+app.post('/competition/:id/enter', async (req, res) => {
+  try {
+    const compId = req.params.id;
+    const { firstName, lastName, phone, scores } = req.body;
+    
+    if (!firstName || !lastName || !phone) {
+      return res.status(400).send('Name and phone number are required');
+    }
+    
+    // Create competitor
+    const competitorResult = await dbRun('INSERT INTO competitors (name, phone, competition_id) VALUES (?, ?, ?)', 
+      [`${firstName} ${lastName}`, phone, compId]);
+    const competitorId = competitorResult.lastID;
+    
+    // Process scores
+    if (scores && typeof scores === 'object') {
+      for (const [routeId, scoreData] of Object.entries(scores)) {
+        if (scoreData && typeof scoreData === 'object') {
+          const { flash, topSecond, topAny, zone, top, zone1, zone2, zone3 } = scoreData;
+          
+          // Insert score record
+          await dbRun('INSERT INTO scores (competitor_id, route_id, attempts, topped, zones) VALUES (?, ?, ?, ?, ?)', [
+            competitorId,
+            routeId,
+            flash ? 1 : (topSecond ? 2 : (topAny ? 3 : 0)), // attempts based on selection
+            (flash || topSecond || topAny || top) ? 1 : 0, // topped
+            (zone || zone1 || zone2 || zone3) ? 1 : 0 // zones (but only if no top)
+          ]);
+        }
+      }
+    }
+    
+    res.redirect(`/competition/${compId}?success=1`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error submitting scores');
   }
 });
 

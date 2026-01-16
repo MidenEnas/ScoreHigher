@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter <%= competition.name %> - Score Higher</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Enter <%= competition.name %></h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/competition/<%= competition.id %>">Back to Competition</a>
+        </nav>
+    </header>
+    <main>
+        <form action="/competition/<%= competition.id %>/enter" method="POST" id="scoreForm">
+            <section class="competitor-info">
+                <h2>Your Information</h2>
+                <div class="form-row">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                <div class="form-row">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+                <div class="form-row">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="e.g. 0712345678">
+                </div>
+            </section>
+
+            <section class="scoring-section">
+                <h2>Score Submission</h2>
+                <p>Please select your achievements for each route. Remember: if you topped a route, you don't get zone points.</p>
+
+                <% 
+                const boulderRoutes = routes.filter(r => r.type === 'boulder');
+                const leadRoutes = routes.filter(r => r.type === 'lead');
+                %>
+
+                <% if (boulderRoutes.length > 0) { %>
+                    <h3>Bouldering Routes</h3>
+                    <% boulderRoutes.forEach(route => { %>
+                        <div class="route-scoring" data-route-type="boulder">
+                            <h4>Boulder <%= route.number %></h4>
+                            <div class="score-options">
+                                <label class="score-option">
+                                    <input type="radio" name="scores[<%= route.id %>][flash]" value="1" onchange="handleBoulderChange(<%= route.id %>)">
+                                    <span>Flash (1st attempt)</span>
+                                </label>
+                                <label class="score-option">
+                                    <input type="radio" name="scores[<%= route.id %>][topSecond]" value="1" onchange="handleBoulderChange(<%= route.id %>)">
+                                    <span>Top (2nd attempt)</span>
+                                </label>
+                                <label class="score-option">
+                                    <input type="radio" name="scores[<%= route.id %>][topAny]" value="1" onchange="handleBoulderChange(<%= route.id %>)">
+                                    <span>Top (3rd+ attempt)</span>
+                                </label>
+                                <label class="score-option">
+                                    <input type="checkbox" name="scores[<%= route.id %>][zone]" value="1" id="zone-<%= route.id %>" onchange="handleZoneChange(<%= route.id %>)">
+                                    <span>Zone only (no top)</span>
+                                </label>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } %>
+
+                <% if (leadRoutes.length > 0) { %>
+                    <h3>Lead Routes</h3>
+                    <% leadRoutes.forEach(route => { %>
+                        <div class="route-scoring" data-route-type="lead">
+                            <h4>Lead <%= route.number %></h4>
+                            <div class="score-options">
+                                <label class="score-option">
+                                    <input type="checkbox" name="scores[<%= route.id %>][top]" value="1" id="top-<%= route.id %>" onchange="handleLeadChange(<%= route.id %>)">
+                                    <span>Top</span>
+                                </label>
+                                <label class="score-option">
+                                    <input type="checkbox" name="scores[<%= route.id %>][zone1]" value="1" id="zone1-<%= route.id %>" onchange="handleLeadZoneChange(<%= route.id %>, 1)">
+                                    <span>Zone 1</span>
+                                </label>
+                                <label class="score-option">
+                                    <input type="checkbox" name="scores[<%= route.id %>][zone2]" value="1" id="zone2-<%= route.id %>" onchange="handleLeadZoneChange(<%= route.id %>, 2)">
+                                    <span>Zone 2</span>
+                                </label>
+                                <label class="score-option">
+                                    <input type="checkbox" name="scores[<%= route.id %>][zone3]" value="1" id="zone3-<%= route.id %>" onchange="handleLeadZoneChange(<%= route.id %>, 3)">
+                                    <span>Zone 3</span>
+                                </label>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } %>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-button">Submit Scores</button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        function handleBoulderChange(routeId) {
+            // Uncheck zone if any top option is selected
+            const zoneCheckbox = document.getElementById('zone-' + routeId);
+            if (zoneCheckbox) {
+                zoneCheckbox.checked = false;
+            }
+        }
+
+        function handleZoneChange(routeId) {
+            // Uncheck all top options if zone is selected
+            const flashRadio = document.querySelector(`input[name="scores[${routeId}][flash]"]`);
+            const topSecondRadio = document.querySelector(`input[name="scores[${routeId}][topSecond]"]`);
+            const topAnyRadio = document.querySelector(`input[name="scores[${routeId}][topAny]"]`);
+            
+            if (flashRadio) flashRadio.checked = false;
+            if (topSecondRadio) topSecondRadio.checked = false;
+            if (topAnyRadio) topAnyRadio.checked = false;
+        }
+
+        function handleLeadChange(routeId) {
+            // Uncheck all zones if top is selected
+            for (let i = 1; i <= 3; i++) {
+                const zoneCheckbox = document.getElementById('zone' + i + '-' + routeId);
+                if (zoneCheckbox) {
+                    zoneCheckbox.checked = false;
+                }
+            }
+        }
+
+        function handleLeadZoneChange(routeId, zoneNum) {
+            // Uncheck top if any zone is selected
+            const topCheckbox = document.getElementById('top-' + routeId);
+            if (topCheckbox) {
+                topCheckbox.checked = false;
+            }
+        }
+
+        // Form validation
+        document.getElementById('scoreForm').addEventListener('submit', function(e) {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+
+            if (!firstName || !lastName || !phone) {
+                alert('Please fill in all your information fields.');
+                e.preventDefault();
+                return false;
+            }
+
+            // Phone number validation (basic)
+            const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
+            if (!phoneRegex.test(phone)) {
+                alert('Please enter a valid phone number.');
+                e.preventDefault();
+                return false;
+            }
+
+            return true;
+        });
+    </script>
+</body>
+</html>
