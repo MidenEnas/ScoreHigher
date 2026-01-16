@@ -75,20 +75,6 @@ router.get('/competition/:id', async (req, res) => {
   }
 });
 
-// Edit competition form
-router.get('/competition/:id/edit', async (req, res) => {
-  try {
-    const compId = req.params.id;
-    const competition = await dbGet('SELECT * FROM competitions WHERE id = ?', [compId]);
-    if (!competition) return res.status(404).send('Competition not found');
-    
-    res.render('admin/edit-competition', { competition });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send('Database error');
-  }
-});
-
 // Handle edit competition
 router.post('/competition/:id/edit', async (req, res) => {
   const compId = req.params.id;
