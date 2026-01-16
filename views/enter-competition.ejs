@@ -59,19 +59,19 @@
                             <h4>Boulder <%= route.number %></h4>
                             <div class="score-options">
                                 <label class="score-option">
-                                    <input type="radio" name="scores[<%= route.id %>][score]" value="flash" onchange="handleBoulderChange(<%= route.id %>)">
+                                    <input type="radio" name="scores[<%= route.id %>][flash]" value="1" onchange="handleBoulderChange(<%= route.id %>)">
                                     <span>Flash (1st attempt)</span>
                                 </label>
                                 <label class="score-option">
-                                    <input type="radio" name="scores[<%= route.id %>][score]" value="topSecond" onchange="handleBoulderChange(<%= route.id %>)">
+                                    <input type="radio" name="scores[<%= route.id %>][topSecond]" value="1" onchange="handleBoulderChange(<%= route.id %>)">
                                     <span>Top (2nd attempt)</span>
                                 </label>
                                 <label class="score-option">
-                                    <input type="radio" name="scores[<%= route.id %>][score]" value="topAny" onchange="handleBoulderChange(<%= route.id %>)">
+                                    <input type="radio" name="scores[<%= route.id %>][topAny]" value="1" onchange="handleBoulderChange(<%= route.id %>)">
                                     <span>Top (Any Attempt)</span>
                                 </label>
                                 <label class="score-option">
-                                    <input type="radio" name="scores[<%= route.id %>][score]" value="zone" onchange="handleBoulderChange(<%= route.id %>)">
+                                    <input type="radio" name="scores[<%= route.id %>][zone]" value="1" onchange="handleBoulderChange(<%= route.id %>)">
                                     <span>Zone</span>
                                 </label>
                             </div>
