@@ -34,7 +34,6 @@
 
             <section class="scoring-section">
                 <h2>Score Submission</h2>
-                <p>Please select your achievements for each route. Remember: if you topped a route, you don't get zone points.</p>
 
                 <% 
                 const boulderRoutes = routes.filter(r => r.type === 'boulder');
@@ -57,11 +56,11 @@
                                 </label>
                                 <label class="score-option">
                                     <input type="radio" name="scores[<%= route.id %>][topAny]" value="1" onchange="handleBoulderChange(<%= route.id %>)">
-                                    <span>Top (3rd+ attempt)</span>
+                                    <span>Top (Any Attempt)</span>
                                 </label>
                                 <label class="score-option">
                                     <input type="checkbox" name="scores[<%= route.id %>][zone]" value="1" id="zone-<%= route.id %>" onchange="handleZoneChange(<%= route.id %>)">
-                                    <span>Zone only (no top)</span>
+                                    <span>Zone</span>
                                 </label>
                             </div>
                         </div>
@@ -104,22 +103,12 @@
 
     <script>
         function handleBoulderChange(routeId) {
-            // Uncheck zone if any top option is selected
-            const zoneCheckbox = document.getElementById('zone-' + routeId);
-            if (zoneCheckbox) {
-                zoneCheckbox.checked = false;
-            }
+            // If any top option is selected, zone is automatically ignored in processing
+            // No need to uncheck zone here
         }
 
         function handleZoneChange(routeId) {
-            // Uncheck all top options if zone is selected
-            const flashRadio = document.querySelector(`input[name="scores[${routeId}][flash]"]`);
-            const topSecondRadio = document.querySelector(`input[name="scores[${routeId}][topSecond]"]`);
-            const topAnyRadio = document.querySelector(`input[name="scores[${routeId}][topAny]"]`);
-            
-            if (flashRadio) flashRadio.checked = false;
-            if (topSecondRadio) topSecondRadio.checked = false;
-            if (topAnyRadio) topAnyRadio.checked = false;
+            // Zone can be selected alongside top options, but top takes priority in scoring
         }
 
         function handleLeadChange(routeId) {

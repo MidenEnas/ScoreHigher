@@ -119,13 +119,17 @@ app.post('/competition/:id/enter', async (req, res) => {
         if (scoreData && typeof scoreData === 'object') {
           const { flash, topSecond, topAny, zone, top, zone1, zone2, zone3 } = scoreData;
           
+          // Determine topped status (prioritize top over zone)
+          const hasTop = flash || topSecond || topAny || top;
+          const hasZone = hasTop ? false : (zone || zone1 || zone2 || zone3); // Only count zone if no top
+          
           // Insert score record
           await dbRun('INSERT INTO scores (competitor_id, route_id, attempts, topped, zones) VALUES (?, ?, ?, ?, ?)', [
             competitorId,
             routeId,
             flash ? 1 : (topSecond ? 2 : (topAny ? 3 : 0)), // attempts based on selection
-            (flash || topSecond || topAny || top) ? 1 : 0, // topped
-            (zone || zone1 || zone2 || zone3) ? 1 : 0 // zones (but only if no top)
+            hasTop ? 1 : 0, // topped
+            hasZone ? 1 : 0 // zones only if no top
           ]);
         }
       }
