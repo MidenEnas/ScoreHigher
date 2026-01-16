@@ -158,6 +158,9 @@ main {
 @media (max-width: 768px) {
     .search-form {
         flex-direction: column;
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
