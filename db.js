@@ -57,6 +57,13 @@ async function initDatabase() {
       )
     `);
 
+    // Add location column if not exists (for migration)
+    try {
+      await dbRun(`ALTER TABLE competitions ADD COLUMN location TEXT`);
+    } catch (err) {
+      // Column might already exist, ignore
+    }
+
     // Routes table
     await dbRun(`
       CREATE TABLE IF NOT EXISTS routes (
