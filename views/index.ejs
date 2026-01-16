@@ -15,8 +15,48 @@
         </nav>
     </header>
     <main>
-        <h2>Welcome to Score Higher</h2>
-        <p>Manage your climbing competitions with ease.</p>
+        <h2>Climbing Competitions</h2>
+        
+        <form method="GET" action="/" class="search-form">
+            <input type="text" name="search" value="<%= search %>" placeholder="Search competitions by name..." class="search-input">
+            <button type="submit" class="search-button">Search</button>
+            <% if (search) { %>
+                <a href="/" class="clear-search">Clear Search</a>
+            <% } %>
+        </form>
+        
+        <% if (competitions && competitions.length > 0) { %>
+            <div class="competitions-grid">
+                <% competitions.forEach(comp => { %>
+                    <div class="competition-card">
+                        <h3><%= comp.name %></h3>
+                        <div class="competition-details">
+                            <p><strong>Date:</strong> <%= new Date(comp.date).toLocaleDateString() %></p>
+                            <p><strong>Location:</strong> <%= comp.location || 'TBA' %></p>
+                            <p><strong>Disciplines:</strong> 
+                                <% 
+                                let disciplines = [];
+                                if (comp.boulder_enabled) disciplines.push(`Bouldering (${comp.num_boulder_routes} routes)`);
+                                if (comp.lead_enabled) disciplines.push(`Lead (${comp.num_lead_routes} routes)`);
+                                %>
+                                <%= disciplines.join(', ') || 'None' %>
+                            </p>
+                            <p><strong>Type:</strong> <%= comp.self_judged ? 'Self-Judged' : 'Judged' %></p>
+                        </div>
+                        <a href="/competition/<%= comp.id %>" class="view-competition">View Competition</a>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="no-competitions">
+                <% if (search) { %>
+                    <p>No competitions found matching "<%= search %>".</p>
+                    <a href="/">View all competitions</a>
+                <% } else { %>
+                    <p>No competitions available at the moment.</p>
+                <% } %>
+            </div>
+        <% } %>
     </main>
 </body>
 </html>

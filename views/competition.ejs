@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= competition.name %> - Score Higher</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1><%= competition.name %></h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/admin">Admin</a>
+        </nav>
+    </header>
+    <main>
+        <div class="competition-header">
+            <div class="competition-info">
+                <h2>Competition Details</h2>
+                <p><strong>Date:</strong> <%= new Date(competition.date).toLocaleDateString() %></p>
+                <p><strong>Location:</strong> <%= competition.location || 'TBA' %></p>
+                <p><strong>Disciplines:</strong>
+                    <%
+                    let disciplines = [];
+                    if (competition.boulder_enabled) disciplines.push(`Bouldering (${competition.num_boulder_routes} routes)`);
+                    if (competition.lead_enabled) disciplines.push(`Lead (${competition.num_lead_routes} routes)`);
+                    %>
+                    <%= disciplines.join(', ') || 'None' %>
+                </p>
+                <p><strong>Type:</strong> <%= competition.self_judged ? 'Self-Judged' : 'Judged' %></p>
+            </div>
+        </div>
+
+        <h2>Routes</h2>
+        <% if (routes && routes.length > 0) { %>
+            <div class="routes-section">
+                <% 
+                const boulderRoutes = routes.filter(r => r.type === 'boulder');
+                const leadRoutes = routes.filter(r => r.type === 'lead');
+                %>
+                
+                <% if (boulderRoutes.length > 0) { %>
+                    <h3>Bouldering Routes</h3>
+                    <div class="routes-grid">
+                        <% boulderRoutes.forEach(route => { %>
+                            <div class="route-card">
+                                <h4>Route <%= route.number %></h4>
+                                <p>Points: Flash (<%= competition.flash_points %>), Second (<%= competition.second_points %>), Third+ (<%= competition.third_points %>), Zone (<%= competition.zone_points %>)</p>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } %>
+                
+                <% if (leadRoutes.length > 0) { %>
+                    <h3>Lead Routes</h3>
+                    <div class="routes-grid">
+                        <% leadRoutes.forEach(route => { %>
+                            <div class="route-card">
+                                <h4>Route <%= route.number %></h4>
+                                <p>Points: Zone (<%= competition.lead_zone_points %>), Top (<%= competition.lead_top_points %>)</p>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } %>
+            </div>
+        <% } else { %>
+            <p>No routes configured yet.</p>
+        <% } %>
+
+        <h2>Competitors</h2>
+        <% if (competitors && competitors.length > 0) { %>
+            <div class="competitors-list">
+                <% competitors.forEach(comp => { %>
+                    <div class="competitor-card">
+                        <h3><%= comp.name %></h3>
+                        <p><%= competition.self_judged ? `Phone: ${comp.phone || 'Not provided'}` : `Bib: ${comp.bib || 'Not assigned'}` %></p>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p>No competitors registered yet.</p>
+        <% } %>
+    </main>
+</body>
+</html>

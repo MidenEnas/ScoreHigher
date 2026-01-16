@@ -38,8 +38,41 @@ app.get('/health', (req, res) => {
 // Routes
 app.use('/admin', require('./routes/admin'));
 
-app.get('/', (req, res) => {
-  res.render('index');
+app.get('/', async (req, res) => {
+  try {
+    const { search } = req.query;
+    let query = 'SELECT * FROM competitions WHERE 1=1';
+    let params = [];
+    
+    if (search) {
+      query += ' AND name LIKE ?';
+      params.push(`%${search}%`);
+    }
+    
+    query += ' ORDER BY date DESC';
+    
+    const competitions = await dbAll(query, params);
+    res.render('index', { competitions, search: search || '' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Database error');
+  }
+});
+
+app.get('/competition/:id', async (req, res) => {
+  try {
+    const compId = req.params.id;
+    const competition = await dbGet('SELECT * FROM competitions WHERE id = ?', [compId]);
+    if (!competition) return res.status(404).send('Competition not found');
+    
+    const routes = await dbAll('SELECT * FROM routes WHERE competition_id = ? ORDER BY type, number', [compId]);
+    const competitors = await dbAll('SELECT * FROM competitors WHERE competition_id = ? ORDER BY name', [compId]);
+    
+    res.render('competition', { competition, routes, competitors });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Database error');
+  }
 });
 
 // Error handling
