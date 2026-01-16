@@ -22,7 +22,7 @@ header {
 }
 
 header h1 {
-    color: #f8f6f2;
+    color: #ffffff;
     margin: 0 0 0.75rem 0;
     font-size: 1.8rem;
     text-align: center;
@@ -279,28 +279,43 @@ main {
 .view-competition {
     display: block;
     width: 100%;
-    padding: 0.875rem;
-    background-color: #7a9b7f;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #7a9b7f 0%, #6a8b6f 100%);
     color: #ffffff;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     margin-top: 1rem;
-    font-weight: 500;
-    font-size: 1rem;
+    font-weight: 600;
+    font-size: 1.05rem;
     font-family: 'Georgia', serif;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(122, 155, 127, 0.3);
+    text-transform: none;
+    letter-spacing: 0.3px;
 }
 
 .view-competition:hover {
-    background-color: #6a8b6f;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    background: linear-gradient(135deg, #6a8b6f 0%, #5a7b5f 100%);
+    box-shadow: 0 5px 15px rgba(122, 155, 127, 0.4);
+    transform: translateY(-2px);
+}
+
+.view-competition:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(122, 155, 127, 0.3);
+}
+
+.view-competition:focus {
+    outline: 3px solid rgba(122, 155, 127, 0.5);
+    outline-offset: 2px;
 }
 
 @media (max-width: 768px) {
     .view-competition {
-        padding: 1rem;
-        font-size: 1.05rem;
+        padding: 1.1rem 1.5rem;
+        font-size: 1.1rem;
+        border-radius: 12px;
     }
 }
 
