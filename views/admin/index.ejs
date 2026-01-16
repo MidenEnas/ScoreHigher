@@ -11,36 +11,26 @@
         <h1>Admin Dashboard</h1>
         <nav>
             <a href="/">Home</a>
-            <a href="/admin/users">Users</a>
-            <form action="/logout" method="POST" style="display: inline; margin: 0;">
+            <a href="/admin/users">Manage Users</a>
+            <span class="user-info">Welcome, <%= user.first_name %>!</span>
+            <form action="/logout" method="POST" style="display: inline;">
                 <button type="submit" class="logout-btn">Logout</button>
             </form>
         </nav>
     </header>
     <main>
         <h2>Manage Competitions</h2>
-        
-        <div class="admin-actions" style="margin: 2rem 0;">
-            <form action="/admin/create-competition" method="GET" style="display: inline-block;">
-                <button type="submit" class="admin-button">Create New Competition</button>
-            </form>
-        </div>
-        
+        <a href="/admin/create-competition">Create New Competition</a>
         <h3>Existing Competitions</h3>
         <% if (competitions && competitions.length > 0) { %>
-            <div class="competitions-list">
+            <ul>
                 <% competitions.forEach(comp => { %>
-                    <div class="admin-competition-card">
-                        <div>
-                            <strong><%= comp.name %></strong>
-                            <span style="color: #6a5a4a; margin-left: 1rem;"><%= new Date(comp.date).toLocaleDateString() %></span>
-                        </div>
-                        <form action="/admin/competition/<%= comp.id %>" method="GET" style="margin: 0;">
-                            <button type="submit" class="admin-button-small">Manage</button>
-                        </form>
-                    </div>
+                    <li>
+                        <strong><%= comp.name %></strong> - <%= comp.date %>
+                        <a href="/admin/competition/<%= comp.id %>">Manage</a>
+                    </li>
                 <% }); %>
-            </div>
+            </ul>
         <% } else { %>
             <p>No competitions yet.</p>
         <% } %>
