@@ -40,6 +40,7 @@ async function initDatabase() {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         date DATE NOT NULL,
+        location TEXT,
         boulder_enabled INTEGER DEFAULT 0,
         lead_enabled INTEGER DEFAULT 0,
         num_boulder_routes INTEGER DEFAULT 0,

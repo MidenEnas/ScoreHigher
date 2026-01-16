@@ -15,6 +15,7 @@
     </header>
     <main>
         <p><strong>Date:</strong> <%= competition.date %></p>
+        <p><strong>Location:</strong> <%= competition.location || 'TBA' %></p>
         <p><strong>Boulder:</strong> <%= competition.boulder_enabled ? 'Yes (' + competition.num_boulder_routes + ' routes)' : 'No' %></p>
         <p><strong>Lead:</strong> <%= competition.lead_enabled ? 'Yes (' + competition.num_lead_routes + ' routes)' : 'No' %></p>
         <p><strong>Self-Judged:</strong> <%= competition.self_judged ? 'Yes' : 'No' %></p>
