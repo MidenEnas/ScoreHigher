@@ -15,7 +15,7 @@ a {
 }
 
 header {
-    background-color: #5a4a3a;
+    background-color: #4f3d27;
     color: #f8f6f2;
     padding: 1.25rem 1.5rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -63,11 +63,11 @@ nav a:hover {
 @media (max-width: 768px) {
     nav {
         gap: 0.5rem;
-        font-size: 0.9rem;
+        font-size: 1.05rem;
     }
     
     nav a {
-        padding: 0.4rem 0.6rem;
+        padding: 0.5rem 0.75rem;
     }
 }
 
@@ -706,7 +706,7 @@ main {
 
 @media (max-width: 768px) {
     .leaderboard {
-        padding: 0.5rem 0;
+        padding: 1rem;
         border-radius: 8px;
         margin-left: -1rem;
         margin-right: -1rem;
