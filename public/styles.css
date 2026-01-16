@@ -22,3 +22,56 @@ main {
     padding: 2rem;
     text-align: center;
 }
+
+.competitor-item {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.competitor-item span {
+    flex-grow: 1;
+}
+
+.competitor-edit {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+}
+
+.competitor-edit form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.competitor-edit label {
+    margin-right: 0.5rem;
+}
+
+.competitor-edit input {
+    padding: 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}

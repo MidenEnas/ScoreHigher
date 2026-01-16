@@ -131,4 +131,37 @@ router.post('/competition/:id/add-competitor', async (req, res) => {
   }
 });
 
+// Handle edit competitor
+router.post('/competition/:compId/edit-competitor/:competitorId', async (req, res) => {
+  const { compId, competitorId } = req.params;
+  const { name, bib, phone } = req.body;
+  
+  if (!name) {
+    return res.status(400).send('Name is required');
+  }
+  
+  try {
+    await dbRun('UPDATE competitors SET name = ?, bib = ?, phone = ? WHERE id = ? AND competition_id = ?', [name, bib || null, phone || null, competitorId, compId]);
+    res.redirect(`/admin/competition/${compId}`);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send('Error updating competitor');
+  }
+});
+
+// Handle delete competitor
+router.post('/competition/:compId/delete-competitor/:competitorId', async (req, res) => {
+  const { compId, competitorId } = req.params;
+  
+  try {
+    // Delete associated scores first
+    await dbRun('DELETE FROM scores WHERE competitor_id = ?', [competitorId]);
+    await dbRun('DELETE FROM competitors WHERE id = ? AND competition_id = ?', [competitorId, compId]);
+    res.redirect(`/admin/competition/${compId}`);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send('Error deleting competitor');
+  }
+});
+
 module.exports = router;

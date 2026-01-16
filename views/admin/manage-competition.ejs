@@ -103,11 +103,30 @@
 
         <h2>Competitors</h2>
         <% if (competitors && competitors.length > 0) { %>
-            <ul>
-                <% competitors.forEach(comp => { %>
-                    <li><%= comp.name %> <% if (competition.self_judged) { %>- <%= comp.phone %><% } else { %>- Bib <%= comp.bib %><% } %></li>
-                <% }); %>
-            </ul>
+            <% competitors.forEach(comp => { %>
+                <div class="competitor-item" id="competitor-view-<%= comp.id %>">
+                    <span><%= comp.name %> <% if (competition.self_judged) { %>- <%= comp.phone %><% } else { %>- Bib <%= comp.bib %><% } %></span>
+                    <button onclick="editCompetitor(<%= comp.id %>)">Edit</button>
+                    <form method="POST" action="/admin/competition/<%= competition.id %>/delete-competitor/<%= comp.id %>" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this competitor?');">
+                        <button type="submit" class="btn-danger">Delete</button>
+                    </form>
+                </div>
+                <div class="competitor-edit" id="competitor-edit-<%= comp.id %>" style="display: none;">
+                    <form action="/admin/competition/<%= competition.id %>/edit-competitor/<%= comp.id %>" method="POST">
+                        <label for="name-<%= comp.id %>">Competitor Name:</label>
+                        <input type="text" id="name-<%= comp.id %>" name="name" value="<%= comp.name %>" required>
+                        <% if (competition.self_judged) { %>
+                            <label for="phone-<%= comp.id %>">Phone Number:</label>
+                            <input type="text" id="phone-<%= comp.id %>" name="phone" value="<%= comp.phone || '' %>">
+                        <% } else { %>
+                            <label for="bib-<%= comp.id %>">Bib Number:</label>
+                            <input type="number" id="bib-<%= comp.id %>" name="bib" value="<%= comp.bib || '' %>">
+                        <% } %>
+                        <button type="submit">Save</button>
+                        <button type="button" onclick="cancelEditCompetitor(<%= comp.id %>)">Cancel</button>
+                    </form>
+                </div>
+            <% }); %>
         <% } else { %>
             <p>No competitors yet.</p>
         <% } %>
@@ -149,6 +168,16 @@
                     view.style.display = 'block';
                     edit.style.display = 'none';
                 }
+            }
+
+            function editCompetitor(id) {
+                document.getElementById('competitor-view-' + id).style.display = 'none';
+                document.getElementById('competitor-edit-' + id).style.display = 'block';
+            }
+
+            function cancelEditCompetitor(id) {
+                document.getElementById('competitor-view-' + id).style.display = 'block';
+                document.getElementById('competitor-edit-' + id).style.display = 'none';
             }
 
             document.getElementById('boulder').addEventListener('change', function() {
