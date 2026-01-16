@@ -40,32 +40,18 @@
 
         <h2>Routes</h2>
         <% if (routes && routes.length > 0) { %>
-            <div class="routes-section">
-                <% 
+            <div class="routes-summary">
+                <%
                 const boulderRoutes = routes.filter(r => r.type === 'boulder');
                 const leadRoutes = routes.filter(r => r.type === 'lead');
                 %>
                 
                 <% if (boulderRoutes.length > 0) { %>
-                    <h3>Bouldering Routes</h3>
-                    <div class="routes-grid">
-                        <% boulderRoutes.forEach(route => { %>
-                            <div class="route-card">
-                                <h4>Route <%= route.number %></h4>
-                            </div>
-                        <% }); %>
-                    </div>
+                    <p><strong><%= boulderRoutes.length %> Bouldering Routes</strong></p>
                 <% } %>
                 
                 <% if (leadRoutes.length > 0) { %>
-                    <h3>Lead Routes</h3>
-                    <div class="routes-grid">
-                        <% leadRoutes.forEach(route => { %>
-                            <div class="route-card">
-                                <h4>Route <%= route.number %></h4>
-                            </div>
-                        <% }); %>
-                    </div>
+                    <p><strong><%= leadRoutes.length %> Lead Routes</strong></p>
                 <% } %>
             </div>
         <% } else { %>
@@ -84,6 +70,50 @@
             </div>
         <% } else { %>
             <p>No competitors registered yet.</p>
+        <% } %>
+
+        <h2>Leaderboard</h2>
+        <% if (leaderboard && leaderboard.length > 0) { %>
+            <div class="leaderboard">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Name</th>
+                            <% if (competition.self_judged) { %><th>Phone</th><% } %>
+                            <th>Total Points</th>
+                            <% if (competition.boulder_enabled) { %>
+                                <th>Boulder Points</th>
+                                <th>Boulder Routes</th>
+                            <% } %>
+                            <% if (competition.lead_enabled) { %>
+                                <th>Lead Points</th>
+                                <th>Lead Routes</th>
+                            <% } %>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% leaderboard.forEach((competitor, index) => { %>
+                            <tr class="<%= index === 0 ? 'first-place' : index === 1 ? 'second-place' : index === 2 ? 'third-place' : '' %>">
+                                <td class="position"><%= index + 1 %></td>
+                                <td class="name"><%= competitor.name %></td>
+                                <% if (competition.self_judged) { %><td class="phone"><%= competitor.phone %></td><% } %>
+                                <td class="total-points"><%= competitor.totalPoints %></td>
+                                <% if (competition.boulder_enabled) { %>
+                                    <td class="boulder-points"><%= competitor.boulderPoints %></td>
+                                    <td class="boulder-routes"><%= competitor.boulderRoutes %></td>
+                                <% } %>
+                                <% if (competition.lead_enabled) { %>
+                                    <td class="lead-points"><%= competitor.leadPoints %></td>
+                                    <td class="lead-routes"><%= competitor.leadRoutes %></td>
+                                <% } %>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <p>No scores submitted yet. Be the first to enter!</p>
         <% } %>
 
         <% if (competition.self_judged) { %>

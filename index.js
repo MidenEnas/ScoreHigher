@@ -68,10 +68,70 @@ app.get('/competition/:id', async (req, res) => {
     const routes = await dbAll('SELECT * FROM routes WHERE competition_id = ? ORDER BY type, number', [compId]);
     const competitors = await dbAll('SELECT * FROM competitors WHERE competition_id = ? ORDER BY name', [compId]);
     
+    // Get all scores for leaderboard calculation
+    const scores = await dbAll(`
+      SELECT s.*, c.name as competitor_name, c.phone, r.type as route_type
+      FROM scores s
+      JOIN competitors c ON s.competitor_id = c.id
+      JOIN routes r ON s.route_id = r.id
+      WHERE r.competition_id = ?
+      ORDER BY c.name, r.type, r.number
+    `, [compId]);
+    
+    // Calculate leaderboard
+    const leaderboard = {};
+    scores.forEach(score => {
+      if (!leaderboard[score.competitor_id]) {
+        leaderboard[score.competitor_id] = {
+          id: score.competitor_id,
+          name: score.competitor_name,
+          phone: score.phone,
+          totalPoints: 0,
+          boulderPoints: 0,
+          leadPoints: 0,
+          boulderRoutes: 0,
+          leadRoutes: 0
+        };
+      }
+      
+      let points = 0;
+      
+      if (score.route_type === 'boulder') {
+        if (score.topped) {
+          if (score.attempts === 1) points = competition.flash_points;
+          else if (score.attempts === 2) points = competition.second_points;
+          else points = competition.third_points;
+          
+          // Apply topped bonus multiplier
+          points *= competition.topped_bonus;
+        } else if (score.zones) {
+          points = competition.zone_points;
+        }
+        
+        leaderboard[score.competitor_id].boulderPoints += points;
+        if (score.topped || score.zones) leaderboard[score.competitor_id].boulderRoutes++;
+      } else if (score.route_type === 'lead') {
+        if (score.topped) {
+          points = competition.lead_top_points;
+        } else if (score.zones) {
+          points = competition.lead_zone_points;
+        }
+        
+        leaderboard[score.competitor_id].leadPoints += points;
+        if (score.topped || score.zones) leaderboard[score.competitor_id].leadRoutes++;
+      }
+      
+      leaderboard[score.competitor_id].totalPoints += points;
+    });
+    
+    // Convert to array and sort by total points (descending)
+    const leaderboardArray = Object.values(leaderboard).sort((a, b) => b.totalPoints - a.totalPoints);
+    
     res.render('competition', { 
       competition, 
       routes, 
       competitors, 
+      leaderboard: leaderboardArray,
       success: req.query.success 
     });
   } catch (err) {

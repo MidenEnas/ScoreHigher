@@ -367,3 +367,87 @@ main {
     text-align: center;
     font-weight: bold;
 }
+
+.routes-summary {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.routes-summary p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.leaderboard {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow-x: auto;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.leaderboard-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+}
+
+.leaderboard-table .position {
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-align: center;
+    width: 60px;
+}
+
+.leaderboard-table .name {
+    font-weight: 500;
+    min-width: 150px;
+}
+
+.leaderboard-table .phone {
+    font-family: monospace;
+    color: #666;
+}
+
+.leaderboard-table .total-points {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #007bff;
+}
+
+.first-place {
+    background-color: #fff3cd !important;
+    border-left: 4px solid #ffc107;
+}
+
+.second-place {
+    background-color: #f8f9fa !important;
+    border-left: 4px solid #6c757d;
+}
+
+.third-place {
+    background-color: #f5f5f5 !important;
+    border-left: 4px solid #8B4513;
+}
+
+.leaderboard-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
