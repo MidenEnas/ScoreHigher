@@ -72,7 +72,70 @@ router.get('/competition/:id', requireAdmin, async (req, res) => {
     const routes = await dbAll('SELECT * FROM routes WHERE competition_id = ? ORDER BY type, number', [compId]);
     const competitors = await dbAll('SELECT * FROM competitors WHERE competition_id = ? ORDER BY name', [compId]);
     
-    res.render('admin/manage-competition', { competition, routes, competitors });
+    // Get scoresheets for self-judged competitions
+    let scoresheets = [];
+    if (competition.self_judged) {
+      const scores = await dbAll(`
+        SELECT 
+          s.*,
+          c.name as competitor_name,
+          c.phone,
+          r.type as route_type,
+          r.number as route_number
+        FROM scores s
+        JOIN competitors c ON s.competitor_id = c.id
+        JOIN routes r ON s.route_id = r.id
+        WHERE r.competition_id = ?
+        ORDER BY c.name, r.type, r.number
+      `, [compId]);
+      
+      // Group scores by competitor
+      const scoresByCompetitor = {};
+      scores.forEach(score => {
+        if (!scoresByCompetitor[score.competitor_id]) {
+          scoresByCompetitor[score.competitor_id] = {
+            competitor_id: score.competitor_id,
+            competitor_name: score.competitor_name,
+            phone: score.phone,
+            scores: [],
+            total_points: 0
+          };
+        }
+        
+        let points = 0;
+        if (score.route_type === 'boulder') {
+          if (score.topped) {
+            if (score.attempts === 1) points = competition.flash_points;
+            else if (score.attempts === 2) points = competition.second_points;
+            else points = competition.third_points;
+            points *= competition.topped_bonus;
+          } else if (score.zones) {
+            points = competition.zone_points;
+          }
+        } else if (score.route_type === 'lead') {
+          if (score.topped) {
+            points = competition.lead_top_points;
+          } else if (score.zones) {
+            points = competition.lead_zone_points;
+          }
+        }
+        
+        scoresByCompetitor[score.competitor_id].scores.push({
+          route_type: score.route_type,
+          route_number: score.route_number,
+          topped: score.topped,
+          zones: score.zones,
+          attempts: score.attempts,
+          points: points
+        });
+        
+        scoresByCompetitor[score.competitor_id].total_points += points;
+      });
+      
+      scoresheets = Object.values(scoresByCompetitor);
+    }
+    
+    res.render('admin/manage-competition', { competition, routes, competitors, scoresheets });
   } catch (err) {
     console.error(err);
     return res.status(500).send('Database error');

@@ -142,6 +142,64 @@
             </form>
         <% } %>
 
+        <% if (competition.self_judged) { %>
+            <h2>Submitted Scoresheets</h2>
+            <% if (scoresheets && scoresheets.length > 0) { %>
+                <% scoresheets.forEach(scoresheet => { %>
+                    <div class="scoresheet-card">
+                        <h3><%= scoresheet.competitor_name %> - <%= scoresheet.phone %></h3>
+                        <div class="scoresheet-details">
+                            <% if (scoresheet.scores && scoresheet.scores.length > 0) { %>
+                                <table class="scoresheet-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Route</th>
+                                            <th>Score</th>
+                                            <th>Points</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% scoresheet.scores.forEach(score => { %>
+                                            <tr>
+                                                <td><%= score.route_type.charAt(0).toUpperCase() + score.route_type.slice(1) %> <%= score.route_number %></td>
+                                                <td>
+                                                    <% if (score.route_type === 'boulder') { %>
+                                                        <% if (score.topped) { %>
+                                                            Top (<%= score.attempts %> attempt<%= score.attempts > 1 ? 's' : '' %>)
+                                                        <% } else if (score.zones) { %>
+                                                            Zone
+                                                        <% } else { %>
+                                                            No score
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        <% if (score.topped) { %>
+                                                            Top
+                                                        <% } else if (score.zones) { %>
+                                                            Zone (<%= score.zones %> zones)
+                                                        <% } else { %>
+                                                            No score
+                                                        <% } %>
+                                                    <% } %>
+                                                </td>
+                                                <td><%= score.points %></td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            <% } else { %>
+                                <p>No scores submitted yet.</p>
+                            <% } %>
+                            <div class="scoresheet-total">
+                                <strong>Total Points: <%= scoresheet.total_points %></strong>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No scoresheets submitted yet.</p>
+            <% } %>
+        <% } %>
+
         <form method="POST" action="/admin/competition/<%= competition.id %>/delete" style="margin-top: 2rem;" onsubmit="return confirm('Are you sure you want to delete this competition? This will delete all associated routes and competitors.');">
             <button type="submit" class="btn btn-danger">Delete Competition</button>
         </form>
