@@ -1,24 +1,15 @@
 const express = require('express');
 const session = require('express-session');
-const SQLiteStore = require('connect-sqlite3')(session);
 const bodyParser = require('body-parser');
 const path = require('path');
-const { initDatabase } = require('./db');
 
 const app = express();
 const port = process.env.PORT || 3000;
-
-// Initialize database
-initDatabase();
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({
-  store: new SQLiteStore({
-    db: 'sessions.db',
-    dir: __dirname
-  }),
   secret: process.env.SESSION_SECRET || 'climbing-score-secret-key-change-in-production',
   resave: false,
   saveUninitialized: false,
