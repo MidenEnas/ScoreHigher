@@ -71,10 +71,9 @@ async function initDatabase() {
     await dbRun(`
       CREATE TABLE IF NOT EXISTS routes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        competition_id INTEGER NOT NULL,
-        type TEXT NOT NULL CHECK(type IN ('boulder', 'lead')),
-        number INTEGER NOT NULL,
-        FOREIGN KEY (competition_id) REFERENCES competitions(id) ON DELETE CASCADE
+        competition_id INTEGER,
+        type TEXT,
+        number INTEGER
       )
     `);
 
@@ -83,8 +82,7 @@ async function initDatabase() {
       CREATE TABLE IF NOT EXISTS competitors (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        competition_id INTEGER,
-        FOREIGN KEY (competition_id) REFERENCES competitions(id) ON DELETE CASCADE
+        competition_id INTEGER
       )
     `);
 
