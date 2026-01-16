@@ -83,6 +83,8 @@ router.post('/competition/:id/edit', async (req, res) => {
   const compId = req.params.id;
   const { name, date, location, boulder, lead, numBoulder, numLead, flash, second, third, zone, bonus, leadZone, leadTop, selfJudged } = req.body;
   
+  console.log('Edit competition request:', { compId, name, date, boulder, lead, numBoulder, numLead });
+  
   if (!name || !date) {
     return res.status(400).send('Name and date are required');
   }
@@ -94,9 +96,10 @@ router.post('/competition/:id/edit', async (req, res) => {
     await dbRun(`UPDATE competitions SET name = ?, date = ?, location = ?, boulder_enabled = ?, lead_enabled = ?, num_boulder_routes = ?, num_lead_routes = ?, flash_points = ?, second_points = ?, third_points = ?, zone_points = ?, topped_bonus = ?, lead_zone_points = ?, lead_top_points = ?, self_judged = ? WHERE id = ?`, 
       [name, date, location || '', boulder ? 1 : 0, lead ? 1 : 0, boulderRoutes, leadRoutes, flash || 75, second || 50, third || 25, zone || 15, bonus || 1.5, leadZone || 15, leadTop || 75, selfJudged ? 1 : 0, compId]);
     
+    console.log('Competition updated successfully');
     res.redirect(`/admin/competition/${compId}`);
   } catch (err) {
-    console.error(err);
+    console.error('Error updating competition:', err);
     return res.status(500).send('Error updating competition');
   }
 });
