@@ -1,37 +1,56 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Georgia', 'Times New Roman', serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f5f1e8;
+    background-image: linear-gradient(135deg, #f5f1e8 0%, #e8dcc8 100%);
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #6b4423;
+}
+
+a {
+    transition: color 0.3s ease;
 }
 
 header {
-    background-color: #333;
-    color: white;
-    padding: 1rem;
+    background: linear-gradient(135deg, #6b4423 0%, #8b5a3c 100%);
+    color: #f5f1e8;
+    padding: 1.5rem;
     text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 nav a {
-    color: white;
+    color: #f5f1e8;
     margin: 0 1rem;
     text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #d4a574;
 }
 
 main {
     padding: 2rem;
     text-align: center;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .competitor-item {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    background-color: #fefdfb;
+    border: 2px solid #d4a574;
+    border-radius: 8px;
     padding: 1rem;
     margin: 0.5rem 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 2px 4px rgba(107,68,35,0.1);
 }
 
 .competitor-item span {
@@ -39,9 +58,9 @@ main {
 }
 
 .competitor-edit {
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    background-color: #f9f6f0;
+    border: 2px solid #c4965f;
+    border-radius: 8px;
     padding: 1rem;
     margin: 0.5rem 0;
 }
@@ -59,21 +78,23 @@ main {
 
 .competitor-edit input {
     padding: 0.25rem;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+    border: 2px solid #d4a574;
+    border-radius: 5px;
+    background-color: #fefdfb;
 }
 
 .btn-danger {
-    background-color: #dc3545;
-    color: white;
+    background-color: #a64b2a;
+    color: #f5f1e8;
     border: none;
     padding: 0.25rem 0.5rem;
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .btn-danger:hover {
-    background-color: #c82333;
+    background-color: #8b3a1f;
 }
 
 .search-form {
@@ -86,33 +107,40 @@ main {
 
 .search-input {
     padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 2px solid #d4a574;
+    border-radius: 8px;
     flex-grow: 1;
     min-width: 200px;
+    background-color: #fefdfb;
+    font-family: 'Georgia', serif;
 }
 
 .search-button {
     padding: 0.5rem 1rem;
-    background-color: #007bff;
-    color: white;
+    background: linear-gradient(135deg, #7a9b6f 0%, #5a7a4f 100%);
+    color: #f5f1e8;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
 }
 
 .search-button:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #5a7a4f 0%, #4a6a3f 100%);
+    box-shadow: 0 4px 8px rgba(107,68,35,0.2);
 }
 
 .clear-search {
-    color: #007bff;
+    color: #7a9b6f;
     text-decoration: none;
     padding: 0.5rem;
+    font-weight: 500;
 }
 
 .clear-search:hover {
     text-decoration: underline;
+    color: #5a7a4f;
 }
 
 .competitions-grid {
@@ -123,54 +151,53 @@ main {
 }
 
 .competition-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1rem;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 3px solid #d4a574;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #fefdfb 0%, #f9f6f0 100%);
+    box-shadow: 0 4px 12px rgba(107,68,35,0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.competition-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(107,68,35,0.25);
 }
 
 .competition-card h3 {
     margin-top: 0;
-    color: #333;
+    color: #6b4423;
+    font-size: 1.4rem;
 }
 
 .competition-details p {
     margin: 0.5rem 0;
-    color: #666;
-}
-
-.view-competition {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background-color: #28a745;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    margin-top: 1rem;
-}
-
-.view-competition:hover {
-    background-color: #218838;
+    color: #5d4e37;
 }
 
 .no-competitions {
     text-align: center;
     padding: 2rem;
-    color: #666;
+    color: #8b5a3c;
+    background-color: #f9f6f0;
+    border-radius: 12px;
+    border: 2px solid #d4a574;
 }
 
 .competition-header {
-    background-color: white;
-    border-radius: 8px;
-    padding: 1.5rem;
+    background: linear-gradient(135deg, #fefdfb 0%, #f9f6f0 100%);
+    border-radius: 12px;
+    padding: 2rem;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(107,68,35,0.15);
+    border: 3px solid #d4a574;
 }
 
 .competition-info h2 {
     margin-top: 0;
-    color: #333;
+    color: #6b4423;
+    border-bottom: 3px solid #d4a574;
+    padding-bottom: 0.75rem;
 }
 
 .routes-section {
@@ -185,15 +212,16 @@ main {
 }
 
 .route-card {
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    border: 2px solid #d4a574;
+    border-radius: 8px;
     padding: 1rem;
-    background-color: white;
+    background: linear-gradient(135deg, #fefdfb 0%, #f9f6f0 100%);
+    box-shadow: 0 2px 6px rgba(107,68,35,0.1);
 }
 
 .route-card h4 {
     margin-top: 0;
-    color: #333;
+    color: #6b4423;
 }
 
 .competitors-list {
@@ -203,52 +231,60 @@ main {
 }
 
 .competitor-card {
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    border: 2px solid #d4a574;
+    border-radius: 8px;
     padding: 1rem;
-    background-color: white;
+    background: linear-gradient(135deg, #fefdfb 0%, #f9f6f0 100%);
+    box-shadow: 0 2px 6px rgba(107,68,35,0.1);
 }
 
 .competitor-card h3 {
     margin-top: 0;
-    color: #333;
+    color: #6b4423;
 }
 
 .enter-competition {
     text-align: center;
     margin-top: 2rem;
     padding: 2rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #f9f6f0 0%, #e8dcc8 100%);
+    border-radius: 12px;
+    border: 3px solid #d4a574;
 }
 
 .enter-button {
     display: inline-block;
     padding: 1rem 2rem;
-    background-color: #28a745;
-    color: white;
+    background: linear-gradient(135deg, #7a9b6f 0%, #5a7a4f 100%);
+    color: #f5f1e8;
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: 10px;
     font-size: 1.1rem;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(107,68,35,0.2);
 }
 
 .enter-button:hover {
-    background-color: #218838;
+    background: linear-gradient(135deg, #5a7a4f 0%, #4a6a3f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(107,68,35,0.3);
 }
 
 .competitor-info {
-    background-color: white;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #fefdfb 0%, #f9f6f0 100%);
+    border-radius: 12px;
     padding: 2rem;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(107,68,35,0.15);
+    border: 3px solid #d4a574;
 }
 
 .competitor-info h2 {
     margin-top: 0;
-    color: #333;
+    color: #6b4423;
+    border-bottom: 3px solid #d4a574;
+    padding-bottom: 0.75rem;
 }
 
 .form-row {
@@ -259,47 +295,60 @@ main {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: #555;
+    color: #6b4423;
+    font-family: 'Georgia', serif;
 }
 
 .form-row input {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 2px solid #d4a574;
+    border-radius: 8px;
     font-size: 1rem;
+    background-color: #fefdfb;
+    transition: border-color 0.3s ease;
+}
+
+.form-row input:focus {
+    outline: none;
+    border-color: #8b5a3c;
+    box-shadow: 0 0 0 3px rgba(212,165,116,0.2);
 }
 
 .scoring-section {
-    background-color: white;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #fefdfb 0%, #f9f6f0 100%);
+    border-radius: 12px;
     padding: 2rem;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(107,68,35,0.15);
+    border: 3px solid #d4a574;
 }
 
 .scoring-section h2 {
     margin-top: 0;
-    color: #333;
+    color: #6b4423;
+    border-bottom: 3px solid #d4a574;
+    padding-bottom: 0.75rem;
 }
 
 .scoring-section > p {
-    color: #666;
+    color: #5d4e37;
     margin-bottom: 2rem;
 }
 
 .route-scoring {
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    border: 2px solid #c4965f;
+    border-radius: 10px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
-    background-color: #fafafa;
+    background: linear-gradient(135deg, #f9f6f0 0%, #f5f1e8 100%);
+    box-shadow: 0 2px 6px rgba(107,68,35,0.1);
 }
 
 .route-scoring h4 {
     margin-top: 0;
-    color: #333;
-    border-bottom: 1px solid #eee;
+    color: #6b4423;
+    border-bottom: 2px solid #d4a574;
     padding-bottom: 0.5rem;
 }
 
@@ -314,26 +363,29 @@ main {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem;
-    background-color: white;
-    border-radius: 4px;
-    border: 1px solid #e0e0e0;
+    padding: 0.75rem;
+    background-color: #fefdfb;
+    border-radius: 8px;
+    border: 2px solid #d4a574;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
 }
 
 .score-option:hover {
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #f9f6f0 0%, #e8dcc8 50%);
+    border-color: #8b5a3c;
+    box-shadow: 0 2px 6px rgba(107,68,35,0.15);
 }
 
 .score-option input[type="radio"],
 .score-option input[type="checkbox"] {
     margin: 0;
+    accent-color: #7a9b6f;
 }
 
 .score-option span {
     font-weight: 500;
-    color: #555;
+    color: #6b4423;
 }
 
 .form-actions {
@@ -343,51 +395,69 @@ main {
 
 .submit-button {
     padding: 1rem 3rem;
-    background-color: #007bff;
-    color: white;
+    background: linear-gradient(135deg, #7a9b6f 0%, #5a7a4f 100%);
+    color: #f5f1e8;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     font-size: 1.1rem;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(107,68,35,0.2);
 }
 
 .submit-button:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #5a7a4f 0%, #4a6a3f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(107,68,35,0.3);
 }
 
 .success-message {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 1rem;
-    border-radius: 6px;
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #2d5a2f;
+    padding: 1.25rem;
+    border-radius: 10px;
     margin-bottom: 2rem;
-    border: 1px solid #c3e6cb;
+    border: 3px solid #7a9b6f;
     text-align: center;
     font-weight: bold;
+    box-shadow: 0 4px 8px rgba(107,68,35,0.15);
+}
+
+.error-message {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+    padding: 1.25rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    border: 3px solid #a64b2a;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(107,68,35,0.15);
 }
 
 .routes-summary {
-    background-color: white;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #fefdfb 0%, #f9f6f0 100%);
+    border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(107,68,35,0.15);
+    border: 3px solid #d4a574;
 }
 
 .routes-summary p {
     margin: 0.5rem 0;
     font-size: 1.1rem;
-    color: #333;
+    color: #6b4423;
 }
 
 .leaderboard {
-    background-color: white;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #fefdfb 0%, #f9f6f0 100%);
+    border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(107,68,35,0.15);
+    border: 3px solid #d4a574;
     overflow-x: auto;
 }
 
@@ -401,13 +471,13 @@ main {
 .leaderboard-table td {
     padding: 0.75rem;
     text-align: center;
-    border-bottom: 1px solid #eee;
+    border-bottom: 2px solid #e8dcc8;
 }
 
 .leaderboard-table th {
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #d4a574 0%, #c4965f 100%);
     font-weight: bold;
-    color: #333;
+    color: #f5f1e8;
 }
 
 .leaderboard-table .position {
@@ -424,32 +494,32 @@ main {
 
 .leaderboard-table .phone {
     font-family: monospace;
-    color: #666;
+    color: #8b5a3c;
 }
 
 .leaderboard-table .total-points {
     font-weight: bold;
     font-size: 1.1rem;
-    color: #007bff;
+    color: #7a9b6f;
 }
 
 .first-place {
-    background-color: #fff3cd !important;
-    border-left: 4px solid #ffc107;
+    background: linear-gradient(90deg, #ffeaa7 0%, #fdcb6e 100%) !important;
+    border-left: 5px solid #d4a035;
 }
 
 .second-place {
-    background-color: #f8f9fa !important;
-    border-left: 4px solid #6c757d;
+    background: linear-gradient(90deg, #e6e6e6 0%, #d0d0d0 100%) !important;
+    border-left: 5px solid #a8a8a8;
 }
 
 .third-place {
-    background-color: #f5f5f5 !important;
-    border-left: 4px solid #8B4513;
+    background: linear-gradient(90deg, #ddb89c 0%, #c99a7b 100%) !important;
+    border-left: 5px solid #a97a5a;
 }
 
 .leaderboard-table tbody tr:hover {
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #f9f6f0 0%, #e8dcc8 100%);
 }
 
 /* Authentication Styles */
@@ -457,9 +527,10 @@ main {
     max-width: 400px;
     margin: 2rem auto;
     padding: 2rem;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #fefdfb 0%, #f9f6f0 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(107,68,35,0.15);
+    border: 3px solid #d4a574;
 }
 
 .auth-form {
@@ -471,29 +542,39 @@ main {
 .auth-link {
     text-align: center;
     margin-top: 1rem;
-    color: #666;
+    color: #5d4e37;
+}
+
+.auth-link a {
+    color: #7a9b6f;
+    font-weight: 600;
+}
+
+.auth-link a:hover {
+    color: #5a7a4f;
 }
 
 .user-info {
-    color: #007bff;
+    color: #7a9b6f;
     font-weight: bold;
     margin-right: 1rem;
 }
 
 .logout-btn {
     background: none;
-    border: 1px solid #dc3545;
-    color: #dc3545;
+    border: 2px solid #a64b2a;
+    color: #a64b2a;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     text-decoration: none;
     font-size: 0.9rem;
+    transition: all 0.3s ease;
 }
 
 .logout-btn:hover {
-    background-color: #dc3545;
-    color: white;
+    background-color: #a64b2a;
+    color: #f5f1e8;
 }
 
 /* Admin Users Management */
@@ -505,23 +586,24 @@ main {
 .users-table {
     width: 100%;
     border-collapse: collapse;
-    background-color: white;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #fefdfb 0%, #f9f6f0 100%);
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(107,68,35,0.15);
+    border: 3px solid #d4a574;
 }
 
 .users-table th,
 .users-table td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid #eee;
+    border-bottom: 2px solid #e8dcc8;
 }
 
 .users-table th {
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #d4a574 0%, #c4965f 100%);
     font-weight: bold;
-    color: #333;
+    color: #f5f1e8;
 }
 
 .role-badge {
@@ -533,18 +615,18 @@ main {
 }
 
 .role-admin {
-    background-color: #dc3545;
-    color: white;
+    background-color: #a64b2a;
+    color: #f5f1e8;
 }
 
 .role-judge {
-    background-color: #ffc107;
-    color: #212529;
+    background-color: #d4a574;
+    color: #3e2723;
 }
 
 .role-user {
-    background-color: #6c757d;
-    color: white;
+    background-color: #8b5a3c;
+    color: #f5f1e8;
 }
 
 .role-form {
@@ -553,15 +635,15 @@ main {
 
 .role-select {
     padding: 0.25rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: white;
+    border: 2px solid #d4a574;
+    border-radius: 6px;
+    background-color: #fefdfb;
 }
 
 .no-users {
     text-align: center;
     padding: 2rem;
-    color: #666;
+    color: #8b5a3c;
     font-style: italic;
 }
 
@@ -572,31 +654,21 @@ main {
     align-items: center;
 }
 
-.clear-search {
-    color: #007bff;
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-
-.clear-search:hover {
-    text-decoration: underline;
-}
-
 /* Scoresheet Styles */
 .scoresheet-card {
-    background-color: white;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #fefdfb 0%, #f9f6f0 100%);
+    border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border: 1px solid #e9ecef;
+    box-shadow: 0 4px 12px rgba(107,68,35,0.15);
+    border: 3px solid #d4a574;
 }
 
 .scoresheet-card h3 {
     margin-top: 0;
     margin-bottom: 1rem;
-    color: #495057;
-    border-bottom: 2px solid #007bff;
+    color: #6b4423;
+    border-bottom: 3px solid #d4a574;
     padding-bottom: 0.5rem;
 }
 
@@ -608,8 +680,8 @@ main {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 4px;
+    background-color: #f9f6f0;
+    border-radius: 8px;
     overflow: hidden;
 }
 
@@ -617,26 +689,27 @@ main {
 .scoresheet-table td {
     padding: 0.75rem;
     text-align: left;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 2px solid #e8dcc8;
 }
 
 .scoresheet-table th {
-    background-color: #e9ecef;
+    background: linear-gradient(135deg, #d4a574 0%, #c4965f 100%);
     font-weight: bold;
-    color: #495057;
+    color: #f5f1e8;
 }
 
 .scoresheet-table tbody tr:hover {
-    background-color: #f1f3f4;
+    background-color: #f5f1e8;
 }
 
 .scoresheet-total {
     text-align: right;
     font-size: 1.1rem;
     font-weight: bold;
-    color: #007bff;
+    color: #7a9b6f;
     padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 4px;
+    background-color: #f9f6f0;
+    border-radius: 8px;
     margin-top: 1rem;
+    border: 2px solid #d4a574;
 }
