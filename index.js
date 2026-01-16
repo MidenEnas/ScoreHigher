@@ -111,9 +111,7 @@ app.get('/competition/:id', async (req, res) => {
           phone: score.phone,
           totalPoints: 0,
           boulderPoints: 0,
-          leadPoints: 0,
-          boulderRoutes: 0,
-          leadRoutes: 0
+          leadPoints: 0
         };
       }
       
@@ -133,7 +131,6 @@ app.get('/competition/:id', async (req, res) => {
         }
         
         leaderboard[score.competitor_id].boulderPoints += points;
-        if (score.topped || score.zones) leaderboard[score.competitor_id].boulderRoutes++;
       } else if (score.route_type === 'lead') {
         if (score.topped) {
           points = competition.lead_top_points;
@@ -142,7 +139,6 @@ app.get('/competition/:id', async (req, res) => {
         }
         
         leaderboard[score.competitor_id].leadPoints += points;
-        if (score.topped || score.zones) leaderboard[score.competitor_id].leadRoutes++;
       }
       
       leaderboard[score.competitor_id].totalPoints += points;
@@ -200,19 +196,44 @@ app.post('/competition/:id/enter', async (req, res) => {
     if (scores && typeof scores === 'object') {
       for (const [routeId, scoreData] of Object.entries(scores)) {
         if (scoreData && typeof scoreData === 'object') {
-          const { flash, topSecond, topAny, zone, top, zone1, zone2, zone3 } = scoreData;
+          let attempts = 0;
+          let topped = 0;
+          let zones = 0;
           
-          // Determine topped status (prioritize top over zone)
-          const hasTop = flash || topSecond || topAny || top;
-          const hasZone = hasTop ? false : (zone || zone1 || zone2 || zone3); // Only count zone if no top
+          // Check if this is a boulder route (has score property) or lead route (has individual properties)
+          if (scoreData.score) {
+            // Boulder route
+            switch (scoreData.score) {
+              case 'flash':
+                attempts = 1;
+                topped = 1;
+                break;
+              case 'topSecond':
+                attempts = 2;
+                topped = 1;
+                break;
+              case 'topAny':
+                attempts = 3;
+                topped = 1;
+                break;
+              case 'zone':
+                zones = 1;
+                break;
+            }
+          } else {
+            // Lead route (old format)
+            const { top, zone1, zone2, zone3 } = scoreData;
+            topped = top ? 1 : 0;
+            zones = (zone1 || zone2 || zone3) ? 1 : 0; // Simplified for lead
+          }
           
           // Insert score record
           await dbRun('INSERT INTO scores (competitor_id, route_id, attempts, topped, zones) VALUES (?, ?, ?, ?, ?)', [
             competitorId,
             routeId,
-            flash ? 1 : (topSecond ? 2 : (topAny ? 3 : 0)), // attempts based on selection
-            hasTop ? 1 : 0, // topped
-            hasZone ? 1 : 0 // zones only if no top
+            attempts,
+            topped,
+            zones
           ]);
         }
       }

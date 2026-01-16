@@ -84,11 +84,9 @@
                             %>
                                 <% if (competition.boulder_enabled) { %>
                                     <th>Boulder Points</th>
-                                    <th>Boulder Routes</th>
                                 <% } %>
                                 <% if (competition.lead_enabled) { %>
                                     <th>Lead Points</th>
-                                    <th>Lead Routes</th>
                                 <% } %>
                             <% } %>
                         </tr>
@@ -102,11 +100,9 @@
                                 <% if (disciplinesEnabled > 1) { %>
                                     <% if (competition.boulder_enabled) { %>
                                         <td class="boulder-points"><%= competitor.boulderPoints %></td>
-                                        <td class="boulder-routes"><%= competitor.boulderRoutes %></td>
                                     <% } %>
                                     <% if (competition.lead_enabled) { %>
                                         <td class="lead-points"><%= competitor.leadPoints %></td>
-                                        <td class="lead-routes"><%= competitor.leadRoutes %></td>
                                     <% } %>
                                 <% } %>
                             </tr>
