@@ -20,8 +20,10 @@ router.get('/competition/:id', async (req, res) => {
     const competition = await dbGet('SELECT * FROM competitions WHERE id = ?', [compId]);
     if (!competition) return res.status(404).send('Competition not found');
     
-    const routes = await dbAll('SELECT * FROM routes WHERE competition_id = ? ORDER BY type, number', [compId]);
-    const competitors = await dbAll('SELECT * FROM competitors WHERE competition_id = ? ORDER BY name', [compId]);
+    // const routes = await dbAll('SELECT * FROM routes WHERE competition_id = ? ORDER BY type, number', [compId]);
+    // const competitors = await dbAll('SELECT * FROM competitors WHERE competition_id = ? ORDER BY name', [compId]);
+    const routes = [];
+    const competitors = [];
     
     res.render('admin/manage-competition', { competition, routes, competitors });
   } catch (err) {

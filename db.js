@@ -34,6 +34,9 @@ const dbAll = (sql, params = []) => {
 // Initialize database
 async function initDatabase() {
   try {
+    // Enable foreign keys
+    await dbRun('PRAGMA foreign_keys = ON');
+    
     // Competitions table
     await dbRun(`
       CREATE TABLE IF NOT EXISTS competitions (
