@@ -42,7 +42,7 @@
         <% if (competitors && competitors.length > 0) { %>
             <ul>
                 <% competitors.forEach(comp => { %>
-                    <li><%= comp.name %></li>
+                    <li><%= comp.name %> <% if (competition.self_judged) { %>- <%= comp.phone %><% } else { %>- Bib <%= comp.bib %><% } %></li>
                 <% }); %>
             </ul>
         <% } else { %>
@@ -54,6 +54,17 @@
             <form action="/admin/competition/<%= competition.id %>/add-competitor" method="POST">
                 <label for="name">Competitor Name:</label>
                 <input type="text" id="name" name="name" required>
+                <label for="bib">Bib Number:</label>
+                <input type="number" id="bib" name="bib" required>
+                <button type="submit">Add Competitor</button>
+            </form>
+        <% } else { %>
+            <h3>Add Competitor</h3>
+            <form action="/admin/competition/<%= competition.id %>/add-competitor" method="POST">
+                <label for="name">Competitor Name:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required>
                 <button type="submit">Add Competitor</button>
             </form>
         <% } %>

@@ -130,14 +130,14 @@ router.post('/competition/:id/delete', async (req, res) => {
 // Handle add competitor
 router.post('/competition/:id/add-competitor', async (req, res) => {
   const compId = req.params.id;
-  const { name } = req.body;
+  const { name, bib, phone } = req.body;
   
   if (!name) {
     return res.status(400).send('Name is required');
   }
   
   try {
-    await dbRun('INSERT INTO competitors (name, competition_id) VALUES (?, ?)', [name, compId]);
+    await dbRun('INSERT INTO competitors (name, bib, phone, competition_id) VALUES (?, ?, ?, ?)', [name, bib || null, phone || null, compId]);
     res.redirect(`/admin/competition/${compId}`);
   } catch (err) {
     console.error(err);

@@ -71,6 +71,8 @@ async function initDatabase() {
       CREATE TABLE IF NOT EXISTS competitors (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
+        bib INTEGER,
+        phone TEXT,
         competition_id INTEGER
       )
     `);
