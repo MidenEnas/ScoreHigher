@@ -54,7 +54,9 @@
                             </p>
                             <p><strong>Type:</strong> <%= comp.self_judged ? 'Self-Judged' : 'Judged' %></p>
                         </div>
-                        <a href="/competition/<%= comp.id %>" class="view-competition">View Competition</a>
+                        <form action="/competition/<%= comp.id %>" method="GET" style="margin: 0;">
+                            <button type="submit" class="view-competition">View Competition</button>
+                        </form>
                     </div>
                 <% }); %>
             </div>

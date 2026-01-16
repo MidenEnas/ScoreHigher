@@ -116,7 +116,9 @@
 
         <% if (competition.self_judged) { %>
             <div class="enter-competition">
-                <a href="/competition/<%= competition.id %>/enter" class="enter-button">Enter Competition</a>
+                <form action="/competition/<%= competition.id %>/enter" method="GET" style="margin: 0;">
+                    <button type="submit" class="enter-button">Enter Competition</button>
+                </form>
             </div>
         <% } %>
     </main>
