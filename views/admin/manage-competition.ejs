@@ -145,56 +145,19 @@
         <% if (competition.self_judged) { %>
             <h2>Submitted Scoresheets</h2>
             <% if (scoresheets && scoresheets.length > 0) { %>
-                <% scoresheets.forEach(scoresheet => { %>
-                    <div class="scoresheet-card">
-                        <h3><%= scoresheet.competitor_name %> - <%= scoresheet.phone %></h3>
-                        <div class="scoresheet-details">
-                            <% if (scoresheet.scores && scoresheet.scores.length > 0) { %>
-                                <table class="scoresheet-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Route</th>
-                                            <th>Score</th>
-                                            <th>Points</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% scoresheet.scores.forEach(score => { %>
-                                            <tr>
-                                                <td><%= score.route_type.charAt(0).toUpperCase() + score.route_type.slice(1) %> <%= score.route_number %></td>
-                                                <td>
-                                                    <% if (score.route_type === 'boulder') { %>
-                                                        <% if (score.topped) { %>
-                                                            Top (<%= score.attempts %> attempt<%= score.attempts > 1 ? 's' : '' %>)
-                                                        <% } else if (score.zones) { %>
-                                                            Zone
-                                                        <% } else { %>
-                                                            No score
-                                                        <% } %>
-                                                    <% } else { %>
-                                                        <% if (score.topped) { %>
-                                                            Top
-                                                        <% } else if (score.zones) { %>
-                                                            Zone (<%= score.zones %> zones)
-                                                        <% } else { %>
-                                                            No score
-                                                        <% } %>
-                                                    <% } %>
-                                                </td>
-                                                <td><%= score.points %></td>
-                                            </tr>
-                                        <% }); %>
-                                    </tbody>
-                                </table>
-                            <% } else { %>
-                                <p>No scores submitted yet.</p>
-                            <% } %>
-                            <div class="scoresheet-total">
-                                <strong>Total Points: <%= scoresheet.total_points %></strong>
-                            </div>
+                <div class="competitors-list">
+                    <% scoresheets.forEach(scoresheet => { %>
+                        <div class="competitor-item">
+                            <span><%= scoresheet.competitor_name %> - <%= scoresheet.phone %></span>
+                            <button onclick="viewCompetitorScore(<%= scoresheet.competitor_id %>)" class="btn btn-primary">View Score</button>
                         </div>
-                    </div>
-                <% }); %>
+                    <% }); %>
+                </div>
+                
+                <div id="scoresheet-view" style="display: none;">
+                    <button onclick="hideScoresheet()" class="btn btn-secondary">Back to List</button>
+                    <div id="scoresheet-content"></div>
+                </div>
             <% } else { %>
                 <p>No scoresheets submitted yet.</p>
             <% } %>
@@ -267,6 +230,77 @@
             document.getElementById('customPoints').addEventListener('change', function() {
                 document.getElementById('pointOptions').style.display = this.checked ? 'block' : 'none';
             });
+
+            // Scoresheet viewing functions
+            window.scoresheetsData = <%- JSON.stringify(scoresheets) %>;
+        </script>
+
+        <script>
+            function viewCompetitorScore(competitorId) {
+                const scoresheet = window.scoresheetsData.find(s => s.competitor_id === competitorId);
+                if (!scoresheet) return;
+
+                const content = document.getElementById('scoresheet-content');
+                let html = `<div class="scoresheet-card">
+                    <h3>${scoresheet.competitor_name} - ${scoresheet.phone}</h3>
+                    <div class="scoresheet-details">`;
+
+                if (scoresheet.scores && scoresheet.scores.length > 0) {
+                    html += `<table class="scoresheet-table">
+                        <thead>
+                            <tr>
+                                <th>Route</th>
+                                <th>Score</th>
+                                <th>Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+
+                    scoresheet.scores.forEach(score => {
+                        let scoreDesc = '';
+                        if (score.route_type === 'boulder') {
+                            if (score.topped) {
+                                scoreDesc = `Top (${score.attempts} attempt${score.attempts > 1 ? 's' : ''})`;
+                            } else if (score.zones) {
+                                scoreDesc = 'Zone';
+                            } else {
+                                scoreDesc = 'No score';
+                            }
+                        } else {
+                            if (score.topped) {
+                                scoreDesc = 'Top';
+                            } else if (score.zones) {
+                                scoreDesc = `Zone (${score.zones} zones)`;
+                            } else {
+                                scoreDesc = 'No score';
+                            }
+                        }
+
+                        html += `<tr>
+                            <td>${score.route_type.charAt(0).toUpperCase() + score.route_type.slice(1)} ${score.route_number}</td>
+                            <td>${scoreDesc}</td>
+                            <td>${score.points}</td>
+                        </tr>`;
+                    });
+
+                    html += `</tbody></table>`;
+                } else {
+                    html += `<p>No scores submitted yet.</p>`;
+                }
+
+                html += `<div class="scoresheet-total">
+                    <strong>Total Points: ${scoresheet.total_points}</strong>
+                </div></div></div>`;
+
+                content.innerHTML = html;
+                document.querySelector('.competitors-list').style.display = 'none';
+                document.getElementById('scoresheet-view').style.display = 'block';
+            }
+
+            function hideScoresheet() {
+                document.getElementById('scoresheet-view').style.display = 'none';
+                document.querySelector('.competitors-list').style.display = 'block';
+            }
         </script>
     </main>
 </body>

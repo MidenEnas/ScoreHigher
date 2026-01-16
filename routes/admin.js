@@ -105,12 +105,12 @@ router.get('/competition/:id', requireAdmin, async (req, res) => {
         let points = 0;
         if (score.route_type === 'boulder') {
           if (score.topped) {
-            if (score.attempts === 1) points = competition.flash_points;
-            else if (score.attempts === 2) points = competition.second_points;
-            else points = competition.third_points;
-            points *= competition.topped_bonus;
+            if (score.attempts === 1) points = 75; // flash base
+            else if (score.attempts === 2) points = 50; // second attempt base
+            else points = 25; // any attempt base
+            points += score.route_number * 1.5; // route number bonus
           } else if (score.zones) {
-            points = competition.zone_points;
+            points = score.route_number * 1.5; // zone points - route number bonus only
           }
         } else if (score.route_type === 'lead') {
           if (score.topped) {

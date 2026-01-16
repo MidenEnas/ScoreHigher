@@ -93,7 +93,7 @@ app.get('/competition/:id', async (req, res) => {
     
     // Get all scores for leaderboard calculation
     const scores = await dbAll(`
-      SELECT s.*, c.name as competitor_name, c.phone, r.type as route_type
+      SELECT s.*, c.name as competitor_name, c.phone, r.type as route_type, r.number as route_number
       FROM scores s
       JOIN competitors c ON s.competitor_id = c.id
       JOIN routes r ON s.route_id = r.id
@@ -121,14 +121,15 @@ app.get('/competition/:id', async (req, res) => {
       
       if (score.route_type === 'boulder') {
         if (score.topped) {
-          if (score.attempts === 1) points = competition.flash_points;
-          else if (score.attempts === 2) points = competition.second_points;
-          else points = competition.third_points;
+          if (score.attempts === 1) points = 75; // flash base
+          else if (score.attempts === 2) points = 50; // second attempt base
+          else points = 25; // any attempt base
           
-          // Apply topped bonus multiplier
-          points *= competition.topped_bonus;
+          // Add route number bonus
+          points += score.route_number * 1.5;
         } else if (score.zones) {
-          points = competition.zone_points;
+          // Zone points - using route number bonus only (no base points for zone)
+          points = score.route_number * 1.5;
         }
         
         leaderboard[score.competitor_id].boulderPoints += points;

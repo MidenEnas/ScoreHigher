@@ -71,7 +71,7 @@
                                     <span>Top (Any Attempt)</span>
                                 </label>
                                 <label class="score-option">
-                                    <input type="checkbox" name="scores[<%= route.id %>][zone]" value="1" id="zone-<%= route.id %>" onchange="handleZoneChange(<%= route.id %>)">
+                                    <input type="radio" name="scores[<%= route.id %>][zone]" value="1" onchange="handleBoulderChange(<%= route.id %>)">
                                     <span>Zone</span>
                                 </label>
                             </div>
@@ -115,12 +115,8 @@
 
     <script>
         function handleBoulderChange(routeId) {
-            // If any top option is selected, zone is automatically ignored in processing
-            // No need to uncheck zone here
-        }
-
-        function handleZoneChange(routeId) {
-            // Zone can be selected alongside top options, but top takes priority in scoring
+            // Radio buttons are mutually exclusive by default
+            // No additional logic needed
         }
 
         function handleLeadChange(routeId) {
