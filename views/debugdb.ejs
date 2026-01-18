@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>DB Debug View</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f4f4f4; }
+    .section { margin-bottom: 30px; }
+  </style>
+</head>
+<body>
+  <h1>Database Debug View</h1>
+
+  <% if (competitions && competitions.length > 0 && !competition) { %>
+    <div class="section">
+      <h2>Competitions</h2>
+      <table>
+        <tr><th>ID</th><th>Name</th><th>Date</th><th>Location</th><th>Self-judged</th><th>View</th></tr>
+        <% competitions.forEach(c => { %>
+          <tr>
+            <td><%= c.id %></td>
+            <td><%= c.name %></td>
+            <td><%= c.date %></td>
+            <td><%= c.location %></td>
+            <td><%= c.self_judged %></td>
+            <td><a href="/debug/competition/<%= c.id %>">Open</a></td>
+          </tr>
+        <% }) %>
+      </table>
+    </div>
+  <% } %>
+
+  <% if (competition) { %>
+    <div class="section">
+      <h2>Competition: <%= competition.name %> (ID: <%= competition.id %>)</h2>
+      <p>Date: <%= competition.date %> — Location: <%= competition.location %></p>
+    </div>
+
+    <div class="section">
+      <h3>Routes</h3>
+      <table>
+        <tr><th>ID</th><th>Type</th><th>Number</th></tr>
+        <% (routes||[]).forEach(r => { %>
+          <tr><td><%= r.id %></td><td><%= r.type %></td><td><%= r.number %></td></tr>
+        <% }) %>
+      </table>
+    </div>
+
+    <div class="section">
+      <h3>Competitors</h3>
+      <table>
+        <tr><th>ID</th><th>Name</th><th>Bib</th><th>Phone</th></tr>
+        <% (competitors||[]).forEach(c => { %>
+          <tr><td><%= c.id %></td><td><%= c.name %></td><td><%= c.bib %></td><td><%= c.phone %></td></tr>
+        <% }) %>
+      </table>
+    </div>
+
+    <div class="section">
+      <h3>Scores (raw)</h3>
+      <table>
+        <tr><th>ID</th><th>Competitor</th><th>Route</th><th>Attempts</th><th>Topped</th><th>Zones</th></tr>
+        <% (scores||[]).forEach(s => { %>
+          <tr>
+            <td><%= s.id %></td>
+            <td><%= s.competitor_name %> (ID: <%= s.competitor_id %>)</td>
+            <td><%= s.route_type %> #<%= s.route_number %> (ID: <%= s.route_id %>)</td>
+            <td><%= s.attempts %></td>
+            <td><%= s.topped %></td>
+            <td><%= s.zones %></td>
+          </tr>
+        <% }) %>
+      </table>
+    </div>
+
+    <div class="section">
+      <h3>Leaderboard</h3>
+      <table>
+        <tr><th>Rank</th><th>Competitor</th><th>Total</th><th>Boulder</th><th>Lead</th></tr>
+        <% (leaderboard||[]).forEach((l, idx) => { %>
+          <tr>
+            <td><%= idx+1 %></td>
+            <td><%= l.name %></td>
+            <td><%= l.totalPoints %></td>
+            <td><%= l.boulderPoints %></td>
+            <td><%= l.leadPoints %></td>
+          </tr>
+        <% }) %>
+      </table>
+    </div>
+  <% } %>
+
+</body>
+</html>

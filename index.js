@@ -71,6 +71,7 @@ app.get('/health', (req, res) => {
 app.use('/', require('./routes/auth'));
 app.use('/admin', require('./routes/admin'));
 app.use('/admin', require('./routes/users'));
+app.use('/debug', require('./routes/debugdb'));
 
 app.get('/', async (req, res) => {
   try {
@@ -206,13 +207,14 @@ app.post('/competition/:id/enter', async (req, res) => {
     if (scores && typeof scores === 'object') {
       for (const [routeId, scoreData] of Object.entries(scores)) {
         if (scoreData && typeof scoreData === 'object') {
-          const { score } = scoreData;
+          const { score, top, zone1, zone2, zone3 } = scoreData;
           
           // Determine topped status and attempts based on score type
           let hasTop = false;
           let hasZone = false;
           let attempts = 0;
           
+          // Handle boulder scoring (radio button - score field)
           if (score === 'flash') {
             hasTop = true;
             attempts = 1;
@@ -225,15 +227,24 @@ app.post('/competition/:id/enter', async (req, res) => {
           } else if (score === 'zone') {
             hasZone = true;
           }
+          // Handle lead scoring (checkboxes - top, zone1, zone2, zone3 fields)
+          else if (top === '1') {
+            hasTop = true;
+            attempts = 1;
+          } else if (zone1 === '1' || zone2 === '1' || zone3 === '1') {
+            hasZone = true;
+          }
           
-          // Insert score record
-          await dbRun('INSERT INTO scores (competitor_id, route_id, attempts, topped, zones) VALUES (?, ?, ?, ?, ?)', [
-            competitorId,
-            routeId,
-            attempts,
-            hasTop ? 1 : 0,
-            hasZone ? 1 : 0
-          ]);
+          // Only insert if there's actually a score to record
+          if (hasTop || hasZone) {
+            await dbRun('INSERT INTO scores (competitor_id, route_id, attempts, topped, zones) VALUES (?, ?, ?, ?, ?)', [
+              competitorId,
+              routeId,
+              attempts,
+              hasTop ? 1 : 0,
+              hasZone ? 1 : 0
+            ]);
+          }
         }
       }
     }
