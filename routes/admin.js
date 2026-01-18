@@ -75,69 +75,94 @@ router.get('/competition/:id', requireAdmin, async (req, res) => {
     // Get scoresheets for self-judged competitions
     let scoresheets = [];
     if (competition.self_judged) {
+      // Get all competitors who have submitted scores
+      const competitorsWithScores = await dbAll(`
+        SELECT DISTINCT c.id, c.name, c.phone
+        FROM competitors c
+        JOIN scores s ON c.id = s.competitor_id
+        JOIN routes r ON s.route_id = r.id
+        WHERE c.competition_id = ?
+        ORDER BY c.name
+      `, [compId]);
+      
+      // Get all scores
       const scores = await dbAll(`
         SELECT 
           s.*,
-          c.name as competitor_name,
-          c.phone,
+          c.id as competitor_id,
+          r.id as route_id,
           r.type as route_type,
           r.number as route_number
         FROM scores s
         JOIN competitors c ON s.competitor_id = c.id
         JOIN routes r ON s.route_id = r.id
         WHERE r.competition_id = ?
-        ORDER BY c.name, r.type, r.number
       `, [compId]);
       
-      console.log('Raw scores from DB:', scores.length, 'records');
-      
-      // Group scores by competitor
-      const scoresByCompetitor = {};
+      // Create a map of scores by competitor and route
+      const scoresMap = {};
       scores.forEach(score => {
-        if (!scoresByCompetitor[score.competitor_id]) {
-          scoresByCompetitor[score.competitor_id] = {
-            competitor_id: score.competitor_id,
-            competitor_name: score.competitor_name,
-            phone: score.phone,
-            scores: [],
-            total_points: 0
-          };
-        }
-        
-        let points = 0;
-        if (score.route_type === 'boulder') {
-          if (score.topped) {
-            if (score.attempts === 1) points = 75; // flash base
-            else if (score.attempts === 2) points = 50; // second attempt base
-            else points = 25; // any attempt base
-            points += score.route_number * 1.5; // route number bonus
-          } else if (score.zones) {
-            points = score.route_number * 1.5; // zone points - route number bonus only
-          }
-        } else if (score.route_type === 'lead') {
-          if (score.topped) {
-            points = competition.lead_top_points;
-          } else if (score.zones) {
-            points = competition.lead_zone_points;
-          }
-        }
-        
-        scoresByCompetitor[score.competitor_id].scores.push({
-          route_type: score.route_type,
-          route_number: score.route_number,
-          topped: score.topped,
-          zones: score.zones,
-          attempts: score.attempts,
-          points: points
-        });
-        
-        scoresByCompetitor[score.competitor_id].total_points += points;
+        const key = `${score.competitor_id}_${score.route_id}`;
+        scoresMap[key] = score;
       });
       
-      scoresheets = Object.values(scoresByCompetitor);
-      console.log('Scoresheets grouped:', scoresheets.length, 'competitors');
-      scoresheets.forEach(s => {
-        console.log(`- ${s.competitor_name}: ${s.scores.length} scores, ${s.total_points} points`);
+      // Build scoresheets with ALL routes
+      scoresheets = competitorsWithScores.map(competitor => {
+        const competitorScores = [];
+        let totalPoints = 0;
+        
+        // Add all routes for this competition
+        routes.forEach(route => {
+          const key = `${competitor.id}_${route.id}`;
+          const score = scoresMap[key];
+          
+          let points = 0;
+          let topped = 0;
+          let zones = 0;
+          let attempts = 0;
+          
+          if (score) {
+            topped = score.topped;
+            zones = score.zones;
+            attempts = score.attempts;
+            
+            if (route.type === 'boulder') {
+              if (score.topped) {
+                if (score.attempts === 1) points = 75;
+                else if (score.attempts === 2) points = 50;
+                else points = 25;
+                points += route.number * 1.5;
+              } else if (score.zones) {
+                points = route.number * 1.5;
+              }
+            } else if (route.type === 'lead') {
+              if (score.topped) {
+                points = competition.lead_top_points;
+              } else if (score.zones) {
+                points = competition.lead_zone_points;
+              }
+            }
+          }
+          
+          competitorScores.push({
+            route_type: route.type,
+            route_number: route.number,
+            topped: topped,
+            zones: zones,
+            attempts: attempts,
+            points: points
+          });
+          
+          totalPoints += points;
+        });
+        
+        return {
+          competitor_id: competitor.id,
+          competitor_name: competitor.name,
+          phone: competitor.phone,
+          scores: competitorScores,
+          total_points: totalPoints
+        };
       });
     }
     
