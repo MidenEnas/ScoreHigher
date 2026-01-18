@@ -89,6 +89,8 @@ router.get('/competition/:id', requireAdmin, async (req, res) => {
         ORDER BY c.name, r.type, r.number
       `, [compId]);
       
+      console.log('Raw scores from DB:', scores.length, 'records');
+      
       // Group scores by competitor
       const scoresByCompetitor = {};
       scores.forEach(score => {
@@ -133,6 +135,10 @@ router.get('/competition/:id', requireAdmin, async (req, res) => {
       });
       
       scoresheets = Object.values(scoresByCompetitor);
+      console.log('Scoresheets grouped:', scoresheets.length, 'competitors');
+      scoresheets.forEach(s => {
+        console.log(`- ${s.competitor_name}: ${s.scores.length} scores, ${s.total_points} points`);
+      });
     }
     
     res.render('admin/manage-competition', { competition, routes, competitors, scoresheets });
